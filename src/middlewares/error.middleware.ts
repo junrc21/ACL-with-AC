@@ -40,7 +40,7 @@ export const errorHandler = (
   error: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void => {
   const requestId = req.headers['x-request-id'] as string;
   const timestamp = new Date().toISOString();

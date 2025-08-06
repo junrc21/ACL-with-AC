@@ -3,7 +3,7 @@ import { HealthController } from '@/modules/acl/controllers/health.controller';
 import { ProductsController } from '@/modules/acl/controllers/products.controller';
 import { CustomersController } from '@/modules/acl/controllers/customers.controller';
 import { validatePlatformCapability } from '@/middlewares/platform.middleware';
-import { validateBody, validateQuery, validateParams } from '@/middlewares/validation.middleware';
+import { validateQuery, validateParams } from '@/middlewares/validation.middleware';
 import { ProductQuerySchema } from '@/modules/acl/dto/product.dto';
 import { CustomerFilterQuerySchema } from '@/modules/acl/dto/customer.dto';
 import { z } from 'zod';

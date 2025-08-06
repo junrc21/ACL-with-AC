@@ -23,7 +23,7 @@ export interface ValidationOptions {
 export const validate = (
   schema: ZodSchema,
   target: ValidationTarget = 'body',
-  options: ValidationOptions = {}
+  _options: ValidationOptions = {}
 ) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {

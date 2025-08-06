@@ -2,10 +2,12 @@ import { Router } from 'express';
 import { HealthController } from '@/modules/acl/controllers/health.controller';
 import { ProductsController } from '@/modules/acl/controllers/products.controller';
 import { CustomersController } from '@/modules/acl/controllers/customers.controller';
+import { OrdersController } from '@/modules/acl/controllers/orders.controller';
 import { validatePlatformCapability } from '@/middlewares/platform.middleware';
 import { validateQuery, validateParams } from '@/middlewares/validation.middleware';
 import { ProductQuerySchema } from '@/modules/acl/dto/product.dto';
 import { CustomerFilterQuerySchema } from '@/modules/acl/dto/customer.dto';
+import { OrderQuerySchema, OrderStatsQuerySchema } from '@/modules/acl/dto/order.dto';
 import { z } from 'zod';
 
 /**
@@ -16,6 +18,7 @@ export const createRouter = (): Router => {
   const healthController = new HealthController();
   const productsController = new ProductsController();
   const customersController = new CustomersController();
+  const ordersController = new OrdersController();
 
   // Health check routes
   router.get('/health', healthController.health);
@@ -104,6 +107,48 @@ export const createRouter = (): Router => {
     async (req, res) => await customersController.deleteCustomer(req, res)
   );
 
+  // Orders routes
+  router.post('/orders',
+    validatePlatformCapability('supportsOrders'),
+    ordersController.createOrder
+  );
+
+  router.post('/orders/sync',
+    validatePlatformCapability('supportsOrders'),
+    ordersController.syncOrders
+  );
+
+  router.get('/orders',
+    validateQuery(OrderQuerySchema),
+    ordersController.getOrders
+  );
+
+  router.get('/orders/statistics',
+    validateQuery(OrderStatsQuerySchema),
+    ordersController.getOrderStatistics
+  );
+
+  router.get('/orders/search',
+    ordersController.searchOrders
+  );
+
+  router.get('/orders/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    ordersController.getOrderById
+  );
+
+  router.put('/orders/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsOrders'),
+    ordersController.updateOrder
+  );
+
+  router.delete('/orders/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsOrders'),
+    ordersController.deleteOrder
+  );
+
   // API version info
   router.get('/', (req, res) => {
     res.json({
@@ -123,6 +168,10 @@ export const createRouter = (): Router => {
         customer_sync: '/api/acl/customers/sync',
         customer_statistics: '/api/acl/customers/statistics',
         customer_search: '/api/acl/customers/search',
+        orders: '/api/acl/orders',
+        order_sync: '/api/acl/orders/sync',
+        order_statistics: '/api/acl/orders/statistics',
+        order_search: '/api/acl/orders/search',
       },
       supported_platforms: ['HOTMART', 'NUVEMSHOP', 'WOOCOMMERCE'],
       documentation: 'https://docs.cyriusx.com/acl-service',

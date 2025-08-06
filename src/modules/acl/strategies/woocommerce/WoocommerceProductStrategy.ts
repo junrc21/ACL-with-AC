@@ -1,11 +1,14 @@
-import { 
-  ProductData, 
-  ProductType, 
+import {
+  ProductData,
+  ProductType,
   ProductStatus,
   StockStatus,
   WooCommerceProductData,
   ProductCategoryData,
-  ProductImageData
+  ProductImageData,
+  ProductAttributeData,
+  ProductReviewData,
+  ProductCustomFieldData
 } from '@/shared/types/product.types';
 import { Platform, StrategyContext, ValidationResult, PlatformError } from '@/shared/types/platform.types';
 import { IWooCommerceProductStrategy } from '../interfaces/IProductStrategy';
@@ -65,6 +68,14 @@ export class WoocommerceProductStrategy implements IWooCommerceProductStrategy {
       categories: this.parseCategories(data.categories),
       images: this.parseImages(data.images),
       variants: undefined,
+
+      // Advanced features
+      attributes: this.parseAttributes(data.attributes),
+      reviews: undefined, // Reviews are fetched separately in WooCommerce
+      customFields: this.parseCustomFields(data.meta_data),
+      tags: this.parseTags((data as any).tags),
+      averageRating: (data as any).average_rating ? parseFloat((data as any).average_rating) : undefined,
+      reviewCount: (data as any).rating_count || undefined,
 
       // WooCommerce-specific metadata
       metadata: {
@@ -375,5 +386,98 @@ export class WoocommerceProductStrategy implements IWooCommerceProductStrategy {
     };
 
     return reverseMap[stockStatus] || 'instock';
+  }
+
+  /**
+   * Parse WooCommerce product attributes
+   */
+  parseAttributes(attributes?: any[]): ProductAttributeData[] {
+    if (!attributes || !Array.isArray(attributes)) {
+      return [];
+    }
+
+    return attributes.map(attr => ({
+      id: attr.id,
+      name: attr.name,
+      slug: attr.slug,
+      position: attr.position,
+      visible: attr.visible,
+      variation: attr.variation,
+      options: Array.isArray(attr.options) ? attr.options : [],
+    }));
+  }
+
+  /**
+   * Parse WooCommerce custom fields from meta_data
+   */
+  parseCustomFields(metaData?: any[]): ProductCustomFieldData[] {
+    if (!metaData || !Array.isArray(metaData)) {
+      return [];
+    }
+
+    return metaData
+      .filter(meta => meta.key && !meta.key.startsWith('_')) // Filter out private meta fields
+      .map(meta => ({
+        name: meta.key,
+        value: meta.value,
+        type: typeof meta.value,
+      }));
+  }
+
+  /**
+   * Parse WooCommerce product tags
+   */
+  parseTags(tags?: any[]): string[] {
+    if (!tags || !Array.isArray(tags)) {
+      return [];
+    }
+
+    return tags.map(tag => tag.name || tag).filter(Boolean);
+  }
+
+  /**
+   * Enhanced image parsing with additional fields
+   */
+  parseImagesEnhanced(images?: any[]): ProductImageData[] {
+    if (!images || !Array.isArray(images)) {
+      return [];
+    }
+
+    return images.map(image => ({
+      id: image.id,
+      src: image.src,
+      alt: image.alt || '',
+      position: image.position || 0,
+      name: image.name || '',
+      caption: image.caption || '',
+      srcset: image.srcset,
+      sizes: image.sizes,
+    }));
+  }
+
+  /**
+   * Fetch and parse product reviews (separate API call needed)
+   */
+  async fetchProductReviews(productId: string, context: StrategyContext): Promise<ProductReviewData[]> {
+    // This would require a separate API call to WooCommerce reviews endpoint
+    // For now, return empty array - this can be implemented when needed
+    this.logger.debug({ productId }, 'Product reviews fetching not implemented yet');
+    return [];
+  }
+
+  /**
+   * Enhanced category parsing with additional fields
+   */
+  parseCategoriesEnhanced(categories?: any[]): ProductCategoryData[] {
+    if (!categories || !Array.isArray(categories)) {
+      return [];
+    }
+
+    return categories.map(category => ({
+      id: category.id?.toString(),
+      externalId: category.id?.toString(),
+      name: category.name,
+      slug: category.slug,
+    }));
   }
 }

@@ -1,11 +1,12 @@
-import { 
-  ProductData, 
-  ProductType, 
+import {
+  ProductData,
+  ProductType,
   ProductStatus,
   HotmartProductData,
   HotmartSalesData,
   ProductCategoryData,
-  ProductImageData
+  ProductImageData,
+  ProductCustomFieldData
 } from '@/shared/types/product.types';
 import { Platform, StrategyContext, ValidationResult, PlatformError } from '@/shared/types/platform.types';
 import { IHotmartProductStrategy } from '../interfaces/IProductStrategy';
@@ -88,6 +89,10 @@ export class HotmartProductStrategy implements IHotmartProductStrategy {
       images: undefined,
       variants: undefined,
 
+      // Advanced features
+      customFields: this.parseCustomFieldsFromSales(salesData),
+      tags: this.parseTagsFromSales(salesData),
+
       // Hotmart-specific metadata
       metadata: {
         transaction: purchase.transaction,
@@ -156,6 +161,10 @@ export class HotmartProductStrategy implements IHotmartProductStrategy {
       categories: undefined,
       images: undefined,
       variants: undefined,
+
+      // Advanced features
+      customFields: this.parseCustomFieldsFromCatalog(productData),
+      tags: this.parseTagsFromCatalog(productData),
 
       // Hotmart-specific metadata
       metadata: {
@@ -342,5 +351,130 @@ export class HotmartProductStrategy implements IHotmartProductStrategy {
     };
 
     return reverseMap[type] || 'EBOOK';
+  }
+
+  /**
+   * Parse custom fields from Hotmart sales data
+   */
+  parseCustomFieldsFromSales(salesData: HotmartSalesData): ProductCustomFieldData[] {
+    const fields: ProductCustomFieldData[] = [];
+
+    // Add producer information as custom fields
+    if (salesData.producer) {
+      // This was moved to the section above
+
+      if (salesData.producer.name) {
+        fields.push({
+          name: 'producer_name',
+          value: salesData.producer.name,
+          type: 'string',
+        });
+      }
+
+      if ((salesData.producer as any).id) {
+        fields.push({
+          name: 'producer_id',
+          value: (salesData.producer as any).id,
+          type: 'string',
+        });
+      }
+    }
+
+    // Add purchase information as custom fields
+    if (salesData.purchase) {
+      fields.push({
+        name: 'purchase_status',
+        value: salesData.purchase.status,
+        type: 'string',
+      });
+
+      if (salesData.purchase.payment?.method) {
+        fields.push({
+          name: 'payment_method',
+          value: salesData.purchase.payment.method,
+          type: 'string',
+        });
+      }
+    }
+
+    return fields;
+  }
+
+  /**
+   * Parse custom fields from Hotmart catalog data
+   */
+  parseCustomFieldsFromCatalog(productData: HotmartProductData): ProductCustomFieldData[] {
+    const fields: ProductCustomFieldData[] = [];
+
+    if (productData.ucode) {
+      fields.push({
+        name: 'ucode',
+        value: productData.ucode,
+        type: 'string',
+      });
+    }
+
+    if (productData.format) {
+      fields.push({
+        name: 'format',
+        value: productData.format,
+        type: 'string',
+      });
+    }
+
+    if (productData.warranty_period) {
+      fields.push({
+        name: 'warranty_period',
+        value: productData.warranty_period,
+        type: 'number',
+      });
+    }
+
+    return fields;
+  }
+
+  /**
+   * Parse tags from Hotmart sales data
+   */
+  parseTagsFromSales(salesData: HotmartSalesData): string[] {
+    const tags: string[] = [];
+
+    // Add producer as tag
+    if (salesData.producer?.name) {
+      tags.push(`producer:${salesData.producer.name}`);
+    }
+
+    // Add product type as tag
+    if ((salesData.product as any)?.type) {
+      tags.push(`type:${(salesData.product as any).type}`);
+    }
+
+    // Add payment method as tag
+    if (salesData.purchase?.payment?.method) {
+      tags.push(`payment:${salesData.purchase.payment.method}`);
+    }
+
+    return tags;
+  }
+
+  /**
+   * Parse tags from Hotmart catalog data
+   */
+  parseTagsFromCatalog(productData: HotmartProductData): string[] {
+    const tags: string[] = [];
+
+    if (productData.format) {
+      tags.push(`format:${productData.format}`);
+    }
+
+    if (productData.is_subscription) {
+      tags.push('subscription');
+    }
+
+    if (productData.status) {
+      tags.push(`status:${productData.status}`);
+    }
+
+    return tags;
   }
 }

@@ -1,12 +1,13 @@
-import { 
-  ProductData, 
-  ProductType, 
+import {
+  ProductData,
+  ProductType,
   ProductStatus,
   StockStatus,
   NuvemshopProductData,
   ProductCategoryData,
   ProductImageData,
-  ProductVariantData
+  ProductVariantData,
+  ProductCustomFieldData
 } from '@/shared/types/product.types';
 import { Platform, StrategyContext, ValidationResult, PlatformError } from '@/shared/types/platform.types';
 import { INuvemshopProductStrategy } from '../interfaces/IProductStrategy';
@@ -68,6 +69,10 @@ export class NuvemshopProductStrategy implements INuvemshopProductStrategy {
       categories: this.parseCategories(data.categories),
       images: this.parseImages(data.images),
       variants: this.parseVariants(data.variants),
+
+      // Advanced features
+      customFields: this.parseCustomFields(data.attributes),
+      tags: Array.isArray(data.tags) ? data.tags : [],
 
       // Nuvemshop-specific metadata
       metadata: {
@@ -323,5 +328,37 @@ export class NuvemshopProductStrategy implements INuvemshopProductStrategy {
       brand: productData.metadata?.brand,
       tags: productData.metadata?.tags || '',
     };
+  }
+
+  /**
+   * Parse Nuvemshop custom fields from attributes
+   */
+  parseCustomFields(attributes?: any[]): ProductCustomFieldData[] {
+    if (!attributes || !Array.isArray(attributes)) {
+      return [];
+    }
+
+    return attributes.map(attr => ({
+      name: attr.name || attr.key || 'unknown',
+      value: attr.value,
+      type: typeof attr.value,
+    }));
+  }
+
+  /**
+   * Enhanced image parsing with additional fields
+   */
+  parseImagesEnhanced(images?: any[]): ProductImageData[] {
+    if (!images || !Array.isArray(images)) {
+      return [];
+    }
+
+    return images.map((image, index) => ({
+      id: image.id,
+      src: image.src,
+      alt: image.alt || '',
+      position: image.position || index,
+      name: `image-${image.id || index}`,
+    }));
   }
 }

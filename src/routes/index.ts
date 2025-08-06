@@ -3,11 +3,13 @@ import { HealthController } from '@/modules/acl/controllers/health.controller';
 import { ProductsController } from '@/modules/acl/controllers/products.controller';
 import { CustomersController } from '@/modules/acl/controllers/customers.controller';
 import { OrdersController } from '@/modules/acl/controllers/orders.controller';
+import { CategoriesController } from '@/modules/acl/controllers/categories.controller';
 import { validatePlatformCapability } from '@/middlewares/platform.middleware';
 import { validateQuery, validateParams } from '@/middlewares/validation.middleware';
 import { ProductQuerySchema } from '@/modules/acl/dto/product.dto';
 import { CustomerFilterQuerySchema } from '@/modules/acl/dto/customer.dto';
 import { OrderQuerySchema, OrderStatsQuerySchema } from '@/modules/acl/dto/order.dto';
+import { CategoryQuerySchema } from '@/modules/acl/dto/category.dto';
 import { z } from 'zod';
 
 /**
@@ -19,6 +21,7 @@ export const createRouter = (): Router => {
   const productsController = new ProductsController();
   const customersController = new CustomersController();
   const ordersController = new OrdersController();
+  const categoriesController = new CategoriesController();
 
   // Health check routes
   router.get('/health', healthController.health);
@@ -149,6 +152,52 @@ export const createRouter = (): Router => {
     ordersController.deleteOrder
   );
 
+  // Categories routes
+  router.post('/categories',
+    validatePlatformCapability('supportsProducts'), // Categories are related to products
+    categoriesController.createCategory
+  );
+
+  router.post('/categories/sync',
+    validatePlatformCapability('supportsProducts'),
+    categoriesController.syncCategories
+  );
+
+  router.get('/categories',
+    validateQuery(CategoryQuerySchema),
+    categoriesController.getCategories
+  );
+
+  router.get('/categories/tree',
+    categoriesController.getCategoryTree
+  );
+
+  router.get('/categories/statistics',
+    categoriesController.getCategoryStatistics
+  );
+
+  router.get('/categories/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    categoriesController.getCategoryById
+  );
+
+  router.get('/categories/:id/path',
+    validateParams(z.object({ id: z.string().uuid() })),
+    categoriesController.getCategoryPath
+  );
+
+  router.put('/categories/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsProducts'),
+    categoriesController.updateCategory
+  );
+
+  router.delete('/categories/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsProducts'),
+    categoriesController.deleteCategory
+  );
+
   // API version info
   router.get('/', (req, res) => {
     res.json({
@@ -172,6 +221,10 @@ export const createRouter = (): Router => {
         order_sync: '/api/acl/orders/sync',
         order_statistics: '/api/acl/orders/statistics',
         order_search: '/api/acl/orders/search',
+        categories: '/api/acl/categories',
+        category_sync: '/api/acl/categories/sync',
+        category_tree: '/api/acl/categories/tree',
+        category_statistics: '/api/acl/categories/statistics',
       },
       supported_platforms: ['HOTMART', 'NUVEMSHOP', 'WOOCOMMERCE'],
       documentation: 'https://docs.cyriusx.com/acl-service',

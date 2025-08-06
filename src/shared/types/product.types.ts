@@ -80,6 +80,14 @@ export interface ProductData {
   images?: ProductImageData[];
   variants?: ProductVariantData[];
 
+  // Advanced features
+  attributes?: ProductAttributeData[];
+  reviews?: ProductReviewData[];
+  customFields?: ProductCustomFieldData[];
+  tags?: string[];
+  averageRating?: number;
+  reviewCount?: number;
+
   // Platform-specific metadata
   metadata?: Record<string, any>;
 
@@ -103,9 +111,51 @@ export interface ProductCategoryData {
  * Product image data
  */
 export interface ProductImageData {
+  id?: string | number;
   src: string;
   alt?: string;
   position?: number;
+  name?: string;
+  caption?: string;
+  srcset?: string;
+  sizes?: string;
+}
+
+/**
+ * Product attribute data
+ */
+export interface ProductAttributeData {
+  id?: string | number;
+  name: string;
+  slug?: string;
+  position?: number;
+  visible?: boolean;
+  variation?: boolean;
+  options: string[];
+}
+
+/**
+ * Product review data
+ */
+export interface ProductReviewData {
+  id?: string | number;
+  reviewer: string;
+  reviewerEmail?: string;
+  rating: number;
+  review: string;
+  status?: 'approved' | 'pending' | 'spam' | 'trash';
+  verified?: boolean;
+  dateCreated?: Date;
+  reviewerAvatarUrls?: Record<string, string>;
+}
+
+/**
+ * Product custom field data
+ */
+export interface ProductCustomFieldData {
+  name: string;
+  value: any;
+  type?: string;
 }
 
 /**

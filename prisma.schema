@@ -1,0 +1,709 @@
+// Unified Prisma Schema for Multi-Platform E-commerce Integration
+// Supports: WooCommerce, Hotmart, and Nuvemshop
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums for platform identification and status tracking
+enum Platform {
+  WOOCOMMERCE
+  HOTMART
+  NUVEMSHOP
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+  REFUNDED
+  FAILED
+  APPROVED
+  BLOCKED
+  CHARGEBACK
+  EXPIRED
+  NO_FUNDS
+  OVERDUE
+  PARTIALLY_REFUNDED
+  PRE_ORDER
+  PRINTED_BILLET
+  PROTESTED
+  STARTED
+  UNDER_ANALYSIS
+  WAITING_PAYMENT
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  CANCELLED
+}
+
+enum ProductType {
+  SIMPLE
+  VARIABLE
+  GROUPED
+  EXTERNAL
+  DIGITAL
+  PHYSICAL
+  SERVICE
+}
+
+enum UserRole {
+  CUSTOMER
+  PRODUCER
+  AFFILIATE
+  COPRODUCER
+  ADMIN
+}
+
+// Core Models
+
+model Store {
+  id          String   @id @default(cuid())
+  platform    Platform
+  externalId  String   // Platform-specific store ID
+  name        String
+  domain      String?
+  currency    String   @default("USD")
+  timezone    String   @default("UTC")
+  isActive    Boolean  @default(true)
+  
+  // Platform-specific metadata
+  metadata    Json?
+  
+  // Relationships
+  products    Product[]
+  customers   Customer[]
+  orders      Order[]
+  categories  Category[]
+  coupons     Coupon[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([platform, externalId])
+  @@map("stores")
+}
+
+model Customer {
+  id                String    @id @default(cuid())
+  storeId           String
+  platform          Platform
+  externalId        String    // Platform-specific customer ID
+  
+  // Core customer information
+  email             String
+  firstName         String?
+  lastName          String?
+  fullName          String?
+  phone             String?
+  identification    String?   // CPF, CNPJ, etc.
+  
+  // Customer status and metrics
+  isActive          Boolean   @default(true)
+  totalSpent        Decimal?  @db.Decimal(10, 2)
+  totalOrders       Int       @default(0)
+  
+  // Timestamps
+  firstInteraction  DateTime?
+  lastInteraction   DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  // Platform-specific metadata
+  metadata          Json?
+  
+  // Relationships
+  store             Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders            Order[]
+  addresses         Address[]
+  
+  @@unique([platform, storeId, externalId])
+  @@index([email])
+  @@index([platform, storeId])
+  @@map("customers")
+}
+
+model Address {
+  id              String   @id @default(cuid())
+  customerId      String?
+  orderId         String?
+  
+  // Address type and identification
+  type            String   // billing, shipping, default
+  
+  // Address components
+  firstName       String?
+  lastName        String?
+  company         String?
+  address1        String
+  address2        String?
+  city            String
+  state           String?
+  postalCode      String?
+  country         String
+  phone           String?
+  email           String?
+  
+  // Additional fields
+  neighborhood    String?
+  number          String?
+  complement      String?
+  
+  isDefault       Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relationships
+  customer        Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  billingOrders   Order[]   @relation("BillingAddress")
+  shippingOrders  Order[]   @relation("ShippingAddress")
+  
+  @@map("addresses")
+}
+
+model Category {
+  id              String     @id @default(cuid())
+  storeId         String
+  platform        Platform
+  externalId      String     // Platform-specific category ID
+  
+  name            String
+  description     String?
+  slug            String
+  parentId        String?
+  
+  // SEO and metadata
+  seoTitle        String?
+  seoDescription  String?
+  
+  // Platform-specific metadata
+  metadata        Json?
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  // Relationships
+  store           Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  parent          Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children        Category[] @relation("CategoryHierarchy")
+  products        ProductCategory[]
+  
+  @@unique([platform, storeId, externalId])
+  @@index([platform, storeId])
+  @@map("categories")
+}
+
+model Product {
+  id              String          @id @default(cuid())
+  storeId         String
+  platform        Platform
+  externalId      String          // Platform-specific product ID
+  
+  // Core product information
+  name            String
+  description     String?
+  shortDescription String?
+  slug            String
+  sku             String?
+  type            ProductType     @default(SIMPLE)
+  status          String          @default("active")
+  
+  // Pricing
+  regularPrice    Decimal?        @db.Decimal(10, 2)
+  salePrice       Decimal?        @db.Decimal(10, 2)
+  currency        String          @default("USD")
+  
+  // Inventory
+  manageStock     Boolean         @default(false)
+  stockQuantity   Int?
+  stockStatus     String          @default("instock")
+  
+  // Physical properties
+  weight          Decimal?        @db.Decimal(8, 3)
+  length          Decimal?        @db.Decimal(8, 3)
+  width           Decimal?        @db.Decimal(8, 3)
+  height          Decimal?        @db.Decimal(8, 3)
+  
+  // SEO and visibility
+  featured        Boolean         @default(false)
+  catalogVisibility String        @default("visible")
+  seoTitle        String?
+  seoDescription  String?
+  
+  // Sales metrics
+  totalSales      Int             @default(0)
+  
+  // Platform-specific metadata
+  metadata        Json?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Relationships
+  store           Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  categories      ProductCategory[]
+  images          ProductImage[]
+  variants        ProductVariant[]
+  orderItems      OrderItem[]
+  
+  @@unique([platform, storeId, externalId])
+  @@index([platform, storeId])
+  @@index([sku])
+  @@map("products")
+}
+
+model ProductCategory {
+  id         String   @id @default(cuid())
+  productId  String
+  categoryId String
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, categoryId])
+  @@map("product_categories")
+}
+
+model ProductImage {
+  id         String  @id @default(cuid())
+  productId  String
+
+  src        String
+  alt        String?
+  position   Int     @default(0)
+
+  createdAt  DateTime @default(now())
+
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+model ProductVariant {
+  id              String    @id @default(cuid())
+  productId       String
+  platform        Platform
+  externalId      String?   // Platform-specific variant ID
+
+  // Variant identification
+  sku             String?
+  name            String?
+
+  // Pricing
+  regularPrice    Decimal?  @db.Decimal(10, 2)
+  salePrice       Decimal?  @db.Decimal(10, 2)
+
+  // Inventory
+  stockQuantity   Int?
+  stockStatus     String    @default("instock")
+
+  // Physical properties
+  weight          Decimal?  @db.Decimal(8, 3)
+  length          Decimal?  @db.Decimal(8, 3)
+  width           Decimal?  @db.Decimal(8, 3)
+  height          Decimal?  @db.Decimal(8, 3)
+
+  // Platform-specific metadata
+  metadata        Json?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relationships
+  product         Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems      OrderItem[]
+
+  @@index([productId])
+  @@map("product_variants")
+}
+
+model Order {
+  id                    String        @id @default(cuid())
+  storeId               String
+  customerId            String?
+  platform              Platform
+  externalId            String        // Platform-specific order ID
+
+  // Order identification
+  orderNumber           String?
+  token                 String?
+
+  // Order status
+  status                OrderStatus   @default(PENDING)
+  paymentStatus         PaymentStatus @default(PENDING)
+  shippingStatus        String?
+  fulfillmentStatus     String?
+
+  // Financial information
+  subtotal              Decimal       @db.Decimal(10, 2)
+  taxTotal              Decimal       @default(0) @db.Decimal(10, 2)
+  shippingTotal         Decimal       @default(0) @db.Decimal(10, 2)
+  discountTotal         Decimal       @default(0) @db.Decimal(10, 2)
+  total                 Decimal       @db.Decimal(10, 2)
+  currency              String        @default("USD")
+
+  // Customer information
+  customerEmail         String?
+  customerName          String?
+  customerPhone         String?
+  customerNote          String?
+
+  // Address references
+  billingAddressId      String?
+  shippingAddressId     String?
+
+  // Payment information
+  paymentMethod         String?
+  paymentMethodTitle    String?
+  transactionId         String?
+  gatewayLink           String?
+
+  // Shipping information
+  shippingMethod        String?
+  shippingOption        String?
+  trackingNumber        String?
+  trackingUrl           String?
+
+  // Important dates
+  orderDate             DateTime      @default(now())
+  paidAt                DateTime?
+  shippedAt             DateTime?
+  completedAt           DateTime?
+  cancelledAt           DateTime?
+
+  // Platform-specific metadata
+  metadata              Json?
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  // Relationships
+  store                 Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customer              Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  billingAddress        Address?      @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  shippingAddress       Address?      @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  items                 OrderItem[]
+  payments              Payment[]
+  refunds               Refund[]
+  notes                 OrderNote[]
+  commissions           Commission[]
+
+  @@unique([platform, storeId, externalId])
+  @@index([platform, storeId])
+  @@index([customerId])
+  @@index([status])
+  @@index([orderDate])
+  @@map("orders")
+}
+
+model OrderItem {
+  id              String          @id @default(cuid())
+  orderId         String
+  productId       String?
+  variantId       String?
+  platform        Platform
+  externalId      String?         // Platform-specific line item ID
+
+  // Item details
+  name            String
+  sku             String?
+  quantity        Int
+
+  // Pricing
+  unitPrice       Decimal         @db.Decimal(10, 2)
+  totalPrice      Decimal         @db.Decimal(10, 2)
+  taxAmount       Decimal         @default(0) @db.Decimal(10, 2)
+
+  // Platform-specific metadata
+  metadata        Json?
+
+  createdAt       DateTime        @default(now())
+
+  // Relationships
+  order           Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product         Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variant         ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  orderId           String
+  platform          Platform
+  externalId        String?       // Platform-specific payment ID
+
+  // Payment details
+  amount            Decimal       @db.Decimal(10, 2)
+  currency          String        @default("USD")
+  status            PaymentStatus @default(PENDING)
+  method            String?       // credit_card, billet, pix, etc.
+  methodTitle       String?
+
+  // Transaction details
+  transactionId     String?
+  gatewayId         String?
+  gatewayResponse   Json?
+
+  // Payment specifics (for Hotmart-style data)
+  installments      Int?          @default(1)
+  processorFee      Decimal?      @db.Decimal(10, 2)
+
+  // Timestamps
+  processedAt       DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // Platform-specific metadata
+  metadata          Json?
+
+  // Relationships
+  order             Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([status])
+  @@map("payments")
+}
+
+model Refund {
+  id              String    @id @default(cuid())
+  orderId         String
+  platform        Platform
+  externalId      String?   // Platform-specific refund ID
+
+  // Refund details
+  amount          Decimal   @db.Decimal(10, 2)
+  currency        String    @default("USD")
+  reason          String?
+  status          String    @default("pending")
+
+  // Processing details
+  processedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Platform-specific metadata
+  metadata        Json?
+
+  // Relationships
+  order           Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@map("refunds")
+}
+
+model OrderNote {
+  id              String    @id @default(cuid())
+  orderId         String
+  platform        Platform
+  externalId      String?   // Platform-specific note ID
+
+  // Note details
+  content         String
+  isCustomerNote  Boolean   @default(false)
+  author          String?
+
+  createdAt       DateTime  @default(now())
+
+  // Platform-specific metadata
+  metadata        Json?
+
+  // Relationships
+  order           Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@map("order_notes")
+}
+
+model Coupon {
+  id                String    @id @default(cuid())
+  storeId           String
+  platform          Platform
+  externalId        String?   // Platform-specific coupon ID
+
+  // Coupon identification
+  code              String
+  name              String?
+  description       String?
+
+  // Discount configuration
+  type              String    // percentage, fixed_cart, fixed_product
+  amount            Decimal   @db.Decimal(10, 2)
+
+  // Usage restrictions
+  usageLimit        Int?
+  usageLimitPerUser Int?
+  usedCount         Int       @default(0)
+
+  // Validity period
+  startsAt          DateTime?
+  expiresAt         DateTime?
+
+  // Status
+  isActive          Boolean   @default(true)
+
+  // Platform-specific metadata
+  metadata          Json?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relationships
+  store             Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([platform, storeId, code])
+  @@index([platform, storeId])
+  @@index([code])
+  @@map("coupons")
+}
+
+// User model for Hotmart-style multi-role users (producers, affiliates, etc.)
+model User {
+  id              String    @id @default(cuid())
+  platform        Platform
+  externalId      String    // Platform-specific user ID (ucode for Hotmart)
+
+  // User identification
+  name            String
+  email           String?
+  tradeName       String?   // Business name
+  role            UserRole  @default(CUSTOMER)
+
+  // Contact information
+  phone           String?
+  cellphone       String?
+
+  // Documents (for Hotmart Brazilian users)
+  documents       Json?     // Array of {type, value} objects
+
+  // Locale and preferences
+  locale          String?
+  timezone        String?
+
+  // Platform-specific metadata
+  metadata        Json?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relationships
+  commissions     Commission[]
+
+  @@unique([platform, externalId])
+  @@index([platform, role])
+  @@index([email])
+  @@map("users")
+}
+
+// Commission model for Hotmart-style affiliate/producer commissions
+model Commission {
+  id                String    @id @default(cuid())
+  orderId           String?   // Link to order if applicable
+  userId            String
+  platform          Platform
+  externalId        String?   // Platform-specific commission ID
+
+  // Commission details
+  transactionCode   String    // Hotmart transaction code
+  amount            Decimal   @db.Decimal(10, 2)
+  currency          String    @default("USD")
+  percentage        Decimal?  @db.Decimal(5, 2)
+
+  // Commission type and source
+  source            String    // PRODUCER, AFFILIATE, COPRODUCER, ADDON
+  commissionAs      String?   // How user was commissioned
+
+  // Exchange rate (for international transactions)
+  exchangeRate      Decimal?  @db.Decimal(10, 6)
+
+  // Status and processing
+  status            String    @default("pending")
+  processedAt       DateTime?
+
+  // Platform-specific metadata
+  metadata          Json?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relationships
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order             Order?    @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([transactionCode])
+  @@map("commissions")
+}
+
+// Webhook model for tracking platform webhooks and events
+model Webhook {
+  id              String    @id @default(cuid())
+  platform        Platform
+
+  // Event details
+  eventType       String    // order.created, payment.completed, etc.
+  eventId         String?   // Platform-specific event ID
+
+  // Payload and processing
+  payload         Json
+  processed       Boolean   @default(false)
+  processedAt     DateTime?
+  errorMessage    String?
+  retryCount      Int       @default(0)
+
+  // Source information
+  sourceIp        String?
+  userAgent       String?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([platform, eventType])
+  @@index([processed])
+  @@index([createdAt])
+  @@map("webhooks")
+}
+
+// Sync log model for tracking data synchronization
+model SyncLog {
+  id              String    @id @default(cuid())
+  platform        Platform
+
+  // Sync details
+  entityType      String    // product, order, customer, etc.
+  entityId        String?   // External entity ID
+  operation       String    // create, update, delete
+
+  // Status and results
+  status          String    // success, error, pending
+  errorMessage    String?
+  recordsAffected Int       @default(0)
+
+  // Timing
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  duration        Int?      // Duration in milliseconds
+
+  // Platform-specific metadata
+  metadata        Json?
+
+  @@index([platform, entityType])
+  @@index([status])
+  @@index([startedAt])
+  @@map("sync_logs")
+}

@@ -1,0 +1,1415 @@
+{
+  "service": "woocommerce",
+  "version": "v3",
+  "baseUrl": "/wp-json/wc/v3",
+  "resources": {
+    "products": {
+      "operations": {
+        "createProduct": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/products",
+          "description": "Create a new product",
+          "requestFields": {
+            "name": { "type": "string", "required": true, "description": "Product name" },
+            "type": { "type": "string", "optional": true, "default": "simple", "description": "Product type. Options: simple, grouped, external, variable" },
+            "regular_price": { "type": "string", "optional": true, "description": "Product regular price" },
+            "sale_price": { "type": "string", "optional": true, "description": "Product sale price" },
+            "date_on_sale_from": { "type": "string", "optional": true, "description": "Start date of sale price" },
+            "date_on_sale_to": { "type": "string", "optional": true, "description": "End date of sale price" },
+            "date_on_sale_from_gmt": { "type": "string", "optional": true, "description": "Start date of sale price, as GMT" },
+            "date_on_sale_to_gmt": { "type": "string", "optional": true, "description": "End date of sale price, as GMT" },
+            "description": { "type": "string", "optional": true, "description": "Product description" },
+            "short_description": { "type": "string", "optional": true, "description": "Product short description" },
+            "sku": { "type": "string", "optional": true, "description": "Unique identifier" },
+            "status": { "type": "string", "optional": true, "default": "publish", "description": "Product status. Options: draft, pending, private, publish" },
+            "featured": { "type": "boolean", "optional": true, "default": false, "description": "Featured product" },
+            "catalog_visibility": { "type": "string", "optional": true, "default": "visible", "description": "Catalog visibility. Options: visible, catalog, search, hidden" },
+            "manage_stock": { "type": "boolean", "optional": true, "description": "Stock management at product level" },
+            "stock_quantity": { "type": "integer", "optional": true, "description": "Stock quantity" },
+            "stock_status": { "type": "string", "optional": true, "default": "instock", "description": "Controls the stock status. Options: instock, outofstock, onbackorder" },
+            "weight": { "type": "string", "optional": true, "description": "Product weight" },
+            "categories": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer", "description": "Category ID" }
+                }
+              }
+            },
+            "images": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "src": { "type": "string", "description": "Image URL" },
+                  "position": { "type": "integer", "optional": true, "description": "Image position" }
+                }
+              }
+            },
+            "attributes": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer", "description": "Attribute ID" },
+                  "name": { "type": "string", "description": "Attribute name" },
+                  "options": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            },
+            "meta_data": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": { "type": "string", "description": "Meta key" },
+                  "value": { "type": "string", "description": "Meta value" }
+                }
+              }
+            }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "name": { "type": "string", "description": "Product name" },
+            "slug": { "type": "string", "description": "Product slug" },
+            "permalink": { "type": "string", "description": "Product URL" },
+            "date_created": { "type": "string", "description": "The date the product was created" },
+            "date_created_gmt": { "type": "string", "description": "The date the product was created, as GMT" },
+            "date_modified": { "type": "string", "description": "The date the product was last modified" },
+            "date_modified_gmt": { "type": "string", "description": "The date the product was last modified, as GMT" },
+            "type": { "type": "string", "description": "Product type" },
+            "status": { "type": "string", "description": "Product status" },
+            "featured": { "type": "boolean", "description": "Featured product" },
+            "catalog_visibility": { "type": "string", "description": "Catalog visibility" },
+            "description": { "type": "string", "description": "Product description" },
+            "short_description": { "type": "string", "description": "Product short description" },
+            "sku": { "type": "string", "description": "Unique identifier" },
+            "price": { "type": "string", "description": "Current product price" },
+            "regular_price": { "type": "string", "description": "Product regular price" },
+            "sale_price": { "type": "string", "description": "Product sale price" },
+            "date_on_sale_from": { "type": "string", "description": "Start date of sale price" },
+            "date_on_sale_to": { "type": "string", "description": "End date of sale price" },
+            "date_on_sale_from_gmt": { "type": "string", "description": "Start date of sale price, as GMT" },
+            "date_on_sale_to_gmt": { "type": "string", "description": "End date of sale price, as GMT" },
+            "total_sales": { "type": "integer", "description": "Amount of sales" },
+            "tax_status": { "type": "string", "description": "Tax status" },
+            "tax_class": { "type": "string", "description": "Tax class" },
+            "manage_stock": { "type": "boolean", "description": "Stock management at product level" },
+            "stock_quantity": { "type": "integer", "description": "Stock quantity" },
+            "stock_status": { "type": "string", "description": "Controls the stock status of the product" },
+            "categories": { "type": "array", "description": "List of categories" },
+            "images": { "type": "array", "description": "List of images" },
+            "attributes": { "type": "array", "description": "List of attributes" },
+            "default_attributes": { "type": "array", "description": "Defaults variation attributes" },
+            "variations": { "type": "array", "description": "List of variations IDs" },
+            "meta_data": { "type": "array", "description": "Meta data" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getProductById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/products/{id}",
+          "description": "Retrieve and view a specific product by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/products/operations/createProduct/responseFields"
+          }
+        },
+        "updateProduct": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/products/{id}",
+          "description": "Update a product",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/products/operations/createProduct/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/products/operations/createProduct/responseFields"
+          }
+        },
+        "deleteProduct": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/products/{id}",
+          "description": "Delete a product",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Whether to bypass trash and force deletion" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/products/operations/createProduct/responseFields"
+          }
+        },
+        "getAllProducts": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/products",
+          "description": "List all products",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "page": { "type": "integer", "optional": true, "default": 1, "description": "Current page of the collection" },
+            "per_page": { "type": "integer", "optional": true, "default": 10, "description": "Maximum number of items to be returned" },
+            "search": { "type": "string", "optional": true, "description": "Limit results to those matching a string" },
+            "slug": { "type": "string", "optional": true, "description": "Limit result set to products with a specific slug" },
+            "status": { "type": "string", "optional": true, "default": "any", "description": "Limit result set to products assigned a specific status" },
+            "type": { "type": "string", "optional": true, "description": "Limit result set to products assigned a specific type" },
+            "sku": { "type": "string", "optional": true, "description": "Limit result set to products with a specific SKU" },
+            "featured": { "type": "boolean", "optional": true, "description": "Limit result set to featured products" },
+            "category": { "type": "string", "optional": true, "description": "Limit result set to products assigned a specific category ID" },
+            "tag": { "type": "string", "optional": true, "description": "Limit result set to products assigned a specific tag ID" },
+            "on_sale": { "type": "boolean", "optional": true, "description": "Limit result set to products on sale" },
+            "min_price": { "type": "string", "optional": true, "description": "Limit result set to products based on a minimum price" },
+            "max_price": { "type": "string", "optional": true, "description": "Limit result set to products based on a maximum price" },
+            "stock_status": { "type": "string", "optional": true, "description": "Limit result set to products with specified stock status" },
+            "include": { "type": "array", "optional": true, "description": "Limit result set to specific IDs" },
+            "exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes specific IDs" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/products/operations/createProduct/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "customers": {
+      "operations": {
+        "createCustomer": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/customers",
+          "description": "Create a new customer",
+          "requestFields": {
+            "email": { "type": "string", "required": true, "description": "Customer email address" },
+            "password": { "type": "string", "required": true, "description": "Customer password" },
+            "first_name": { "type": "string", "optional": true, "description": "Customer first name" },
+            "last_name": { "type": "string", "optional": true, "description": "Customer last name" },
+            "username": { "type": "string", "optional": true, "description": "Customer login name" },
+            "billing": {
+              "type": "object",
+              "optional": true,
+              "properties": {
+                "first_name": { "type": "string", "optional": true, "description": "First name" },
+                "last_name": { "type": "string", "optional": true, "description": "Last name" },
+                "company": { "type": "string", "optional": true, "description": "Company name" },
+                "address_1": { "type": "string", "optional": true, "description": "Address line 1" },
+                "address_2": { "type": "string", "optional": true, "description": "Address line 2" },
+                "city": { "type": "string", "optional": true, "description": "City name" },
+                "state": { "type": "string", "optional": true, "description": "ISO code or name of the state, province or district" },
+                "postcode": { "type": "string", "optional": true, "description": "Postal code" },
+                "country": { "type": "string", "optional": true, "description": "ISO code of the country" },
+                "email": { "type": "string", "optional": true, "description": "Email address" },
+                "phone": { "type": "string", "optional": true, "description": "Phone number" }
+              }
+            },
+            "shipping": {
+              "type": "object",
+              "optional": true,
+              "properties": {
+                "first_name": { "type": "string", "optional": true, "description": "First name" },
+                "last_name": { "type": "string", "optional": true, "description": "Last name" },
+                "company": { "type": "string", "optional": true, "description": "Company name" },
+                "address_1": { "type": "string", "optional": true, "description": "Address line 1" },
+                "address_2": { "type": "string", "optional": true, "description": "Address line 2" },
+                "city": { "type": "string", "optional": true, "description": "City name" },
+                "state": { "type": "string", "optional": true, "description": "ISO code or name of the state, province or district" },
+                "postcode": { "type": "string", "optional": true, "description": "Postal code" },
+                "country": { "type": "string", "optional": true, "description": "ISO code of the country" }
+              }
+            },
+            "meta_data": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": { "type": "string", "description": "Meta key" },
+                  "value": { "type": "string", "description": "Meta value" }
+                }
+              }
+            }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "date_created": { "type": "string", "description": "The date the customer was created" },
+            "date_created_gmt": { "type": "string", "description": "The date the customer was created, as GMT" },
+            "date_modified": { "type": "string", "description": "The date the customer was last modified" },
+            "date_modified_gmt": { "type": "string", "description": "The date the customer was last modified, as GMT" },
+            "email": { "type": "string", "description": "Customer email address" },
+            "first_name": { "type": "string", "description": "Customer first name" },
+            "last_name": { "type": "string", "description": "Customer last name" },
+            "role": { "type": "string", "description": "Customer role" },
+            "username": { "type": "string", "description": "Customer login name" },
+            "billing": { "type": "object", "description": "List of billing address data" },
+            "shipping": { "type": "object", "description": "List of shipping address data" },
+            "is_paying_customer": { "type": "boolean", "description": "Is the customer a paying customer?" },
+            "avatar_url": { "type": "string", "description": "Avatar URL" },
+            "meta_data": { "type": "array", "description": "Meta data" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getCustomerById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/customers/{id}",
+          "description": "Retrieve and view a specific customer by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/customers/operations/createCustomer/responseFields"
+          }
+        },
+        "updateCustomer": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/customers/{id}",
+          "description": "Update a customer",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/customers/operations/createCustomer/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/customers/operations/createCustomer/responseFields"
+          }
+        },
+        "deleteCustomer": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/customers/{id}",
+          "description": "Delete a customer",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Required to be true, as resource does not support trashing" },
+            "reassign": { "type": "integer", "optional": true, "description": "User ID to reassign posts to" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/customers/operations/createCustomer/responseFields"
+          }
+        },
+        "getAllCustomers": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/customers",
+          "description": "List all customers",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "page": { "type": "integer", "optional": true, "default": 1, "description": "Current page of the collection" },
+            "per_page": { "type": "integer", "optional": true, "default": 10, "description": "Maximum number of items to be returned" },
+            "search": { "type": "string", "optional": true, "description": "Limit results to those matching a string" },
+            "exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes specific IDs" },
+            "include": { "type": "array", "optional": true, "description": "Limit result set to specific IDs" },
+            "offset": { "type": "integer", "optional": true, "description": "Offset the result set by a specific number of items" },
+            "order": { "type": "string", "optional": true, "default": "asc", "description": "Order sort attribute ascending or descending" },
+            "orderby": { "type": "string", "optional": true, "default": "name", "description": "Sort collection by object attribute" },
+            "email": { "type": "string", "optional": true, "description": "Limit result set to resources with a specific email" },
+            "role": { "type": "string", "optional": true, "default": "all", "description": "Limit result set to resources with a specific role" },
+            "orderby": { "type": "string", "optional": true, "default": "name", "description": "Sort collection by object attribute. Options: id, include, name, registered_date" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/customers/operations/createCustomer/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "orders": {
+      "operations": {
+        "createOrder": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/orders",
+          "description": "Create a new order",
+          "requestFields": {
+            "parent_id": { "type": "integer", "optional": true, "description": "Parent order ID" },
+            "status": { "type": "string", "optional": true, "default": "pending", "description": "Order status. Options: pending, processing, on-hold, completed, cancelled, refunded, failed, trash" },
+            "currency": { "type": "string", "optional": true, "description": "Currency the order was created with, in ISO format" },
+            "customer_id": { "type": "integer", "optional": true, "default": 0, "description": "User ID who owns the order. 0 for guests" },
+            "customer_note": { "type": "string", "optional": true, "description": "Note left by customer during checkout" },
+            "billing": {
+              "type": "object",
+              "optional": true,
+              "properties": {
+                "first_name": { "type": "string", "optional": true, "description": "First name" },
+                "last_name": { "type": "string", "optional": true, "description": "Last name" },
+                "company": { "type": "string", "optional": true, "description": "Company name" },
+                "address_1": { "type": "string", "optional": true, "description": "Address line 1" },
+                "address_2": { "type": "string", "optional": true, "description": "Address line 2" },
+                "city": { "type": "string", "optional": true, "description": "City name" },
+                "state": { "type": "string", "optional": true, "description": "ISO code or name of the state, province or district" },
+                "postcode": { "type": "string", "optional": true, "description": "Postal code" },
+                "country": { "type": "string", "optional": true, "description": "Country code in ISO 3166-1 alpha-2 format" },
+                "email": { "type": "string", "optional": true, "description": "Email address" },
+                "phone": { "type": "string", "optional": true, "description": "Phone number" }
+              }
+            },
+            "shipping": {
+              "type": "object",
+              "optional": true,
+              "properties": {
+                "first_name": { "type": "string", "optional": true, "description": "First name" },
+                "last_name": { "type": "string", "optional": true, "description": "Last name" },
+                "company": { "type": "string", "optional": true, "description": "Company name" },
+                "address_1": { "type": "string", "optional": true, "description": "Address line 1" },
+                "address_2": { "type": "string", "optional": true, "description": "Address line 2" },
+                "city": { "type": "string", "optional": true, "description": "City name" },
+                "state": { "type": "string", "optional": true, "description": "ISO code or name of the state, province or district" },
+                "postcode": { "type": "string", "optional": true, "description": "Postal code" },
+                "country": { "type": "string", "optional": true, "description": "Country code in ISO 3166-1 alpha-2 format" }
+              }
+            },
+            "payment_method": { "type": "string", "optional": true, "description": "Payment method ID" },
+            "payment_method_title": { "type": "string", "optional": true, "description": "Payment method title" },
+            "transaction_id": { "type": "string", "optional": true, "description": "Unique transaction ID" },
+            "set_paid": { "type": "boolean", "optional": true, "default": false, "description": "Define if the order is paid" },
+            "line_items": {
+              "type": "array",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "product_id": { "type": "integer", "description": "Product ID" },
+                  "variation_id": { "type": "integer", "optional": true, "description": "Variation ID, if applicable" },
+                  "quantity": { "type": "integer", "description": "Quantity ordered" },
+                  "name": { "type": "string", "optional": true, "description": "Product name" },
+                  "tax_class": { "type": "string", "optional": true, "description": "Tax class of product" },
+                  "subtotal": { "type": "string", "optional": true, "description": "Line subtotal (before discounts)" },
+                  "total": { "type": "string", "optional": true, "description": "Line total (after discounts)" }
+                }
+              }
+            },
+            "shipping_lines": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "method_id": { "type": "string", "description": "Shipping method ID" },
+                  "method_title": { "type": "string", "description": "Shipping method name" },
+                  "total": { "type": "string", "description": "Line total (after discounts)" }
+                }
+              }
+            },
+            "meta_data": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": { "type": "string", "description": "Meta key" },
+                  "value": { "type": "string", "description": "Meta value" }
+                }
+              }
+            }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "parent_id": { "type": "integer", "description": "Parent order ID" },
+            "number": { "type": "string", "description": "Order number" },
+            "order_key": { "type": "string", "description": "Order key" },
+            "created_via": { "type": "string", "description": "Shows where the order was created" },
+            "version": { "type": "string", "description": "Version of WooCommerce which last updated the order" },
+            "status": { "type": "string", "description": "Order status" },
+            "currency": { "type": "string", "description": "Currency the order was created with" },
+            "date_created": { "type": "string", "description": "The date the order was created" },
+            "date_created_gmt": { "type": "string", "description": "The date the order was created, as GMT" },
+            "date_modified": { "type": "string", "description": "The date the order was last modified" },
+            "date_modified_gmt": { "type": "string", "description": "The date the order was last modified, as GMT" },
+            "discount_total": { "type": "string", "description": "Total discount amount for the order" },
+            "discount_tax": { "type": "string", "description": "Total discount tax amount for the order" },
+            "shipping_total": { "type": "string", "description": "Total shipping amount for the order" },
+            "shipping_tax": { "type": "string", "description": "Total shipping tax amount for the order" },
+            "cart_tax": { "type": "string", "description": "Sum of line item taxes only" },
+            "total": { "type": "string", "description": "Grand total" },
+            "total_tax": { "type": "string", "description": "Sum of all taxes" },
+            "prices_include_tax": { "type": "boolean", "description": "True the prices included tax during checkout" },
+            "customer_id": { "type": "integer", "description": "User ID who owns the order" },
+            "customer_ip_address": { "type": "string", "description": "Customer's IP address" },
+            "customer_user_agent": { "type": "string", "description": "User agent of the customer" },
+            "customer_note": { "type": "string", "description": "Note left by customer during checkout" },
+            "billing": { "type": "object", "description": "Billing address" },
+            "shipping": { "type": "object", "description": "Shipping address" },
+            "payment_method": { "type": "string", "description": "Payment method ID" },
+            "payment_method_title": { "type": "string", "description": "Payment method title" },
+            "transaction_id": { "type": "string", "description": "Unique transaction ID" },
+            "date_paid": { "type": "string", "description": "The date the order was paid" },
+            "date_paid_gmt": { "type": "string", "description": "The date the order was paid, as GMT" },
+            "date_completed": { "type": "string", "description": "The date the order was completed" },
+            "date_completed_gmt": { "type": "string", "description": "The date the order was completed, as GMT" },
+            "cart_hash": { "type": "string", "description": "MD5 hash of cart items to ensure orders are not modified" },
+            "line_items": { "type": "array", "description": "Line items data" },
+            "tax_lines": { "type": "array", "description": "Tax lines data" },
+            "shipping_lines": { "type": "array", "description": "Shipping lines data" },
+            "fee_lines": { "type": "array", "description": "Fee lines data" },
+            "coupon_lines": { "type": "array", "description": "Coupons line data" },
+            "refunds": { "type": "array", "description": "List of refunds" },
+            "meta_data": { "type": "array", "description": "Meta data" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getOrderById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/orders/{id}",
+          "description": "Retrieve and view a specific order by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/orders/operations/createOrder/responseFields"
+          }
+        },
+        "updateOrder": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/orders/{id}",
+          "description": "Update an order",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/orders/operations/createOrder/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/orders/operations/createOrder/responseFields"
+          }
+        },
+        "deleteOrder": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/orders/{id}",
+          "description": "Delete an order",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Whether to bypass trash and force deletion" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/orders/operations/createOrder/responseFields"
+          }
+        },
+        "getAllOrders": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/orders",
+          "description": "List all orders",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "page": { "type": "integer", "optional": true, "default": 1, "description": "Current page of the collection" },
+            "per_page": { "type": "integer", "optional": true, "default": 10, "description": "Maximum number of items to be returned" },
+            "search": { "type": "string", "optional": true, "description": "Limit results to those matching a string" },
+            "after": { "type": "string", "optional": true, "description": "Limit response to resources published after a given ISO8601 compliant date" },
+            "before": { "type": "string", "optional": true, "description": "Limit response to resources published before a given ISO8601 compliant date" },
+            "exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes specific IDs" },
+            "include": { "type": "array", "optional": true, "description": "Limit result set to specific IDs" },
+            "offset": { "type": "integer", "optional": true, "description": "Offset the result set by a specific number of items" },
+            "order": { "type": "string", "optional": true, "default": "desc", "description": "Order sort attribute ascending or descending" },
+            "orderby": { "type": "string", "optional": true, "default": "date", "description": "Sort collection by object attribute" },
+            "parent": { "type": "array", "optional": true, "description": "Limit result set to those of particular parent IDs" },
+            "parent_exclude": { "type": "array", "optional": true, "description": "Limit result set to all items except those of a particular parent ID" },
+            "status": { "type": "string", "optional": true, "default": "any", "description": "Limit result set to orders assigned a specific status" },
+            "customer": { "type": "integer", "optional": true, "description": "Limit result set to orders assigned a specific customer" },
+            "product": { "type": "integer", "optional": true, "description": "Limit result set to orders assigned a specific product" },
+            "modified_after": { "type": "string", "optional": true, "description": "Limit response to resources modified after a given ISO8601 compliant date" },
+            "modified_before": { "type": "string", "optional": true, "description": "Limit response to resources modified before a given ISO8601 compliant date" },
+            "dp": { "type": "integer", "optional": true, "description": "Number of decimal points to use in each resource" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/orders/operations/createOrder/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "coupons": {
+      "operations": {
+        "createCoupon": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/coupons",
+          "description": "Create a new coupon",
+          "requestFields": {
+            "code": { "type": "string", "required": true, "description": "Coupon code" },
+            "amount": { "type": "string", "optional": true, "description": "The amount of discount. Should always be numeric, even if setting a percentage" },
+            "discount_type": { "type": "string", "optional": true, "default": "fixed_cart", "description": "Determines the type of discount that will be applied. Options: percent, fixed_cart, fixed_product" },
+            "description": { "type": "string", "optional": true, "description": "Coupon description" },
+            "date_expires": { "type": "string", "optional": true, "description": "The date the coupon expires, in the site's timezone" },
+            "date_expires_gmt": { "type": "string", "optional": true, "description": "The date the coupon expires, as GMT" },
+            "individual_use": { "type": "boolean", "optional": true, "default": false, "description": "If true, the coupon can only be used individually" },
+            "product_ids": { "type": "array", "optional": true, "items": { "type": "integer" }, "description": "List of product IDs the coupon can be used on" },
+            "excluded_product_ids": { "type": "array", "optional": true, "items": { "type": "integer" }, "description": "List of product IDs the coupon cannot be used on" },
+            "usage_limit": { "type": "integer", "optional": true, "description": "How many times the coupon can be used in total" },
+            "usage_limit_per_user": { "type": "integer", "optional": true, "description": "How many times the coupon can be used by an individual user" },
+            "limit_usage_to_x_items": { "type": "integer", "optional": true, "description": "Max number of items in the cart the coupon can be applied to" },
+            "free_shipping": { "type": "boolean", "optional": true, "default": false, "description": "If true and if the free shipping method requires a coupon, this coupon will enable free shipping" },
+            "product_categories": { "type": "array", "optional": true, "items": { "type": "integer" }, "description": "List of category IDs the coupon applies to" },
+            "excluded_product_categories": { "type": "array", "optional": true, "items": { "type": "integer" }, "description": "List of category IDs the coupon does not apply to" },
+            "exclude_sale_items": { "type": "boolean", "optional": true, "default": false, "description": "If true, this coupon will not be applied to items that have sale prices" },
+            "minimum_amount": { "type": "string", "optional": true, "description": "Minimum order amount that needs to be in the cart before coupon applies" },
+            "maximum_amount": { "type": "string", "optional": true, "description": "Maximum order amount allowed when using the coupon" },
+            "email_restrictions": { "type": "array", "optional": true, "items": { "type": "string" }, "description": "List of email addresses that can use this coupon" },
+            "meta_data": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": { "type": "string", "description": "Meta key" },
+                  "value": { "type": "string", "description": "Meta value" }
+                }
+              }
+            }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "code": { "type": "string", "description": "Coupon code" },
+            "amount": { "type": "string", "description": "The amount of discount" },
+            "date_created": { "type": "string", "description": "The date the coupon was created" },
+            "date_created_gmt": { "type": "string", "description": "The date the coupon was created, as GMT" },
+            "date_modified": { "type": "string", "description": "The date the coupon was last modified" },
+            "date_modified_gmt": { "type": "string", "description": "The date the coupon was last modified, as GMT" },
+            "discount_type": { "type": "string", "description": "Determines the type of discount that will be applied" },
+            "description": { "type": "string", "description": "Coupon description" },
+            "date_expires": { "type": "string", "description": "The date the coupon expires" },
+            "date_expires_gmt": { "type": "string", "description": "The date the coupon expires, as GMT" },
+            "usage_count": { "type": "integer", "description": "Number of times the coupon has been used already" },
+            "individual_use": { "type": "boolean", "description": "If true, the coupon can only be used individually" },
+            "product_ids": { "type": "array", "description": "List of product IDs the coupon can be used on" },
+            "excluded_product_ids": { "type": "array", "description": "List of product IDs the coupon cannot be used on" },
+            "usage_limit": { "type": "integer", "description": "How many times the coupon can be used in total" },
+            "usage_limit_per_user": { "type": "integer", "description": "How many times the coupon can be used by an individual user" },
+            "limit_usage_to_x_items": { "type": "integer", "description": "Max number of items in the cart the coupon can be applied to" },
+            "free_shipping": { "type": "boolean", "description": "If true and if the free shipping method requires a coupon, this coupon will enable free shipping" },
+            "product_categories": { "type": "array", "description": "List of category IDs the coupon applies to" },
+            "excluded_product_categories": { "type": "array", "description": "List of category IDs the coupon does not apply to" },
+            "exclude_sale_items": { "type": "boolean", "description": "If true, this coupon will not be applied to items that have sale prices" },
+            "minimum_amount": { "type": "string", "description": "Minimum order amount that needs to be in the cart before coupon applies" },
+            "maximum_amount": { "type": "string", "description": "Maximum order amount allowed when using the coupon" },
+            "email_restrictions": { "type": "array", "description": "List of email addresses that can use this coupon" },
+            "used_by": { "type": "array", "description": "List of user IDs (or guest email addresses) that have used the coupon" },
+            "meta_data": { "type": "array", "description": "Meta data" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getCouponById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/coupons/{id}",
+          "description": "Retrieve and view a specific coupon by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/coupons/operations/createCoupon/responseFields"
+          }
+        },
+        "updateCoupon": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/coupons/{id}",
+          "description": "Update a coupon",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/coupons/operations/createCoupon/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/coupons/operations/createCoupon/responseFields"
+          }
+        },
+        "deleteCoupon": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/coupons/{id}",
+          "description": "Delete a coupon",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Whether to bypass trash and force deletion" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/coupons/operations/createCoupon/responseFields"
+          }
+        },
+        "getAllCoupons": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/coupons",
+          "description": "List all coupons",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "page": { "type": "integer", "optional": true, "default": 1, "description": "Current page of the collection" },
+            "per_page": { "type": "integer", "optional": true, "default": 10, "description": "Maximum number of items to be returned" },
+            "search": { "type": "string", "optional": true, "description": "Limit results to those matching a string" },
+            "after": { "type": "string", "optional": true, "description": "Limit response to resources published after a given ISO8601 compliant date" },
+            "before": { "type": "string", "optional": true, "description": "Limit response to resources published before a given ISO8601 compliant date" },
+            "exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes specific IDs" },
+            "include": { "type": "array", "optional": true, "description": "Limit result set to specific IDs" },
+            "offset": { "type": "integer", "optional": true, "description": "Offset the result set by a specific number of items" },
+            "order": { "type": "string", "optional": true, "default": "desc", "description": "Order sort attribute ascending or descending" },
+            "orderby": { "type": "string", "optional": true, "default": "date", "description": "Sort collection by object attribute" },
+            "code": { "type": "string", "optional": true, "description": "Limit result set to resources with a specific code" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/coupons/operations/createCoupon/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "order_notes": {
+      "operations": {
+        "createOrderNote": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/orders/{order_id}/notes",
+          "description": "Create a new order note",
+          "pathParameters": {
+            "order_id": { "type": "integer", "required": true, "description": "Unique identifier for the order" }
+          },
+          "requestFields": {
+            "note": { "type": "string", "required": true, "description": "Order note content" },
+            "customer_note": { "type": "boolean", "optional": true, "default": false, "description": "If true, the note will be shown to customers and they will be notified" },
+            "added_by_user": { "type": "boolean", "optional": true, "default": false, "description": "If true, this note will be attributed to the current user" }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "author": { "type": "string", "description": "Order note author" },
+            "date_created": { "type": "string", "description": "The date the order note was created" },
+            "date_created_gmt": { "type": "string", "description": "The date the order note was created, as GMT" },
+            "note": { "type": "string", "description": "Order note content" },
+            "customer_note": { "type": "boolean", "description": "If true, the note is shown to customers and they are notified" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getOrderNoteById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/orders/{order_id}/notes/{id}",
+          "description": "Retrieve and view a specific order note by ID",
+          "pathParameters": {
+            "order_id": { "type": "integer", "required": true, "description": "Unique identifier for the order" },
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/order_notes/operations/createOrderNote/responseFields"
+          }
+        },
+        "deleteOrderNote": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/orders/{order_id}/notes/{id}",
+          "description": "Delete an order note",
+          "pathParameters": {
+            "order_id": { "type": "integer", "required": true, "description": "Unique identifier for the order" },
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Required to be true, as resource does not support trashing" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/order_notes/operations/createOrderNote/responseFields"
+          }
+        },
+        "getAllOrderNotes": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/orders/{order_id}/notes",
+          "description": "List all order notes",
+          "pathParameters": {
+            "order_id": { "type": "integer", "required": true, "description": "Unique identifier for the order" }
+          },
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "type": { "type": "string", "optional": true, "default": "any", "description": "Limit result to customers or internal notes" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/order_notes/operations/createOrderNote/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "order_refunds": {
+      "operations": {
+        "createOrderRefund": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/orders/{order_id}/refunds",
+          "description": "Create a new order refund",
+          "pathParameters": {
+            "order_id": { "type": "integer", "required": true, "description": "Unique identifier for the order" }
+          },
+          "requestFields": {
+            "amount": { "type": "string", "optional": true, "description": "Refund amount" },
+            "reason": { "type": "string", "optional": true, "description": "Reason for refund" },
+            "refund_payment": { "type": "boolean", "optional": true, "default": true, "description": "Whether to refund payment or not" },
+            "line_items": {
+              "type": "array",
+              "optional": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer", "description": "Item ID" },
+                  "quantity": { "type": "integer", "description": "Quantity to refund" },
+                  "refund_total": { "type": "number", "description": "Line total refund amount" },
+                  "refund_tax": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "integer", "description": "Tax rate ID" },
+                        "refund_total": { "type": "number", "description": "Tax refund amount" }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "api_refund": { "type": "boolean", "optional": true, "default": true, "description": "Whether to make API refund or not" },
+            "api_restock": { "type": "boolean", "optional": true, "default": true, "description": "Whether to restock refunded items" }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "date_created": { "type": "string", "description": "The date the order refund was created" },
+            "date_created_gmt": { "type": "string", "description": "The date the order refund was created, as GMT" },
+            "amount": { "type": "string", "description": "Refund amount" },
+            "reason": { "type": "string", "description": "Reason for refund" },
+            "refunded_by": { "type": "integer", "description": "User ID of user who created the refund" },
+            "refunded_payment": { "type": "boolean", "description": "If the payment was refunded via the API" },
+            "meta_data": { "type": "array", "description": "Meta data" },
+            "line_items": { "type": "array", "description": "Line items data" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getOrderRefundById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/orders/{order_id}/refunds/{id}",
+          "description": "Retrieve and view a specific order refund by ID",
+          "pathParameters": {
+            "order_id": { "type": "integer", "required": true, "description": "Unique identifier for the order" },
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the refund" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/order_refunds/operations/createOrderRefund/responseFields"
+          }
+        },
+        "getAllOrderRefunds": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/orders/{order_id}/refunds",
+          "description": "List all order refunds",
+          "pathParameters": {
+            "order_id": { "type": "integer", "required": true, "description": "Unique identifier for the order" }
+          },
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "page": { "type": "integer", "optional": true, "default": 1, "description": "Current page of the collection" },
+            "per_page": { "type": "integer", "optional": true, "default": 10, "description": "Maximum number of items to be returned" },
+            "search": { "type": "string", "optional": true, "description": "Limit results to those matching a string" },
+            "after": { "type": "string", "optional": true, "description": "Limit response to resources published after a given ISO8601 compliant date" },
+            "before": { "type": "string", "optional": true, "description": "Limit response to resources published before a given ISO8601 compliant date" },
+            "exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes specific IDs" },
+            "include": { "type": "array", "optional": true, "description": "Limit result set to specific IDs" },
+            "offset": { "type": "integer", "optional": true, "description": "Offset the result set by a specific number of items" },
+            "order": { "type": "string", "optional": true, "default": "desc", "description": "Order sort attribute ascending or descending" },
+            "orderby": { "type": "string", "optional": true, "default": "date", "description": "Sort collection by object attribute" },
+            "dp": { "type": "integer", "optional": true, "description": "Number of decimal points to use in each resource" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/order_refunds/operations/createOrderRefund/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "product_attributes": {
+      "operations": {
+        "createProductAttribute": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/products/attributes",
+          "description": "Create a new product attribute",
+          "requestFields": {
+            "name": { "type": "string", "required": true, "description": "Attribute name" },
+            "slug": { "type": "string", "optional": true, "description": "An alphanumeric identifier for the resource unique to its type" },
+            "type": { "type": "string", "optional": true, "default": "select", "description": "Type of attribute. By default only select is supported" },
+            "order_by": { "type": "string", "optional": true, "default": "menu_order", "description": "Default sort order. Options: menu_order, name, name_num, id" },
+            "has_archives": { "type": "boolean", "optional": true, "default": false, "description": "Enable/Disable attribute archives" }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "name": { "type": "string", "description": "Attribute name" },
+            "slug": { "type": "string", "description": "An alphanumeric identifier for the resource unique to its type" },
+            "type": { "type": "string", "description": "Type of attribute" },
+            "order_by": { "type": "string", "description": "Default sort order" },
+            "has_archives": { "type": "boolean", "description": "Enable/Disable attribute archives" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getProductAttributeById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/products/attributes/{id}",
+          "description": "Retrieve and view a specific product attribute by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/product_attributes/operations/createProductAttribute/responseFields"
+          }
+        },
+        "updateProductAttribute": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/products/attributes/{id}",
+          "description": "Update a product attribute",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/product_attributes/operations/createProductAttribute/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/product_attributes/operations/createProductAttribute/responseFields"
+          }
+        },
+        "deleteProductAttribute": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/products/attributes/{id}",
+          "description": "Delete a product attribute",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Required to be true, as resource does not support trashing" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/product_attributes/operations/createProductAttribute/responseFields"
+          }
+        },
+        "getAllProductAttributes": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/products/attributes",
+          "description": "List all product attributes",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/product_attributes/operations/createProductAttribute/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "product_reviews": {
+      "operations": {
+        "createProductReview": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/products/reviews",
+          "description": "Create a new product review",
+          "requestFields": {
+            "product_id": { "type": "integer", "required": true, "description": "Unique identifier for the product that the review belongs to" },
+            "status": { "type": "string", "optional": true, "default": "approved", "description": "Status of the review. Options: approved, hold, spam, unspam, trash, untrash" },
+            "reviewer": { "type": "string", "required": true, "description": "Name of the reviewer" },
+            "reviewer_email": { "type": "string", "required": true, "description": "Email of the reviewer" },
+            "review": { "type": "string", "required": true, "description": "The content of the review" },
+            "rating": { "type": "integer", "optional": true, "description": "Review rating (0 to 5)" }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "date_created": { "type": "string", "description": "The date the review was created" },
+            "date_created_gmt": { "type": "string", "description": "The date the review was created, as GMT" },
+            "product_id": { "type": "integer", "description": "Unique identifier for the product that the review belongs to" },
+            "status": { "type": "string", "description": "Status of the review" },
+            "reviewer": { "type": "string", "description": "Name of the reviewer" },
+            "reviewer_email": { "type": "string", "description": "Email of the reviewer" },
+            "review": { "type": "string", "description": "The content of the review" },
+            "rating": { "type": "integer", "description": "Review rating (0 to 5)" },
+            "verified": { "type": "boolean", "description": "Shows if the reviewer bought the product or not" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getProductReviewById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/products/reviews/{id}",
+          "description": "Retrieve and view a specific product review by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/product_reviews/operations/createProductReview/responseFields"
+          }
+        },
+        "updateProductReview": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/products/reviews/{id}",
+          "description": "Update a product review",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/product_reviews/operations/createProductReview/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/product_reviews/operations/createProductReview/responseFields"
+          }
+        },
+        "deleteProductReview": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/products/reviews/{id}",
+          "description": "Delete a product review",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Whether to bypass trash and force deletion" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/product_reviews/operations/createProductReview/responseFields"
+          }
+        },
+        "getAllProductReviews": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/products/reviews",
+          "description": "List all product reviews",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "page": { "type": "integer", "optional": true, "default": 1, "description": "Current page of the collection" },
+            "per_page": { "type": "integer", "optional": true, "default": 10, "description": "Maximum number of items to be returned" },
+            "search": { "type": "string", "optional": true, "description": "Limit results to those matching a string" },
+            "after": { "type": "string", "optional": true, "description": "Limit response to resources published after a given ISO8601 compliant date" },
+            "before": { "type": "string", "optional": true, "description": "Limit response to resources published before a given ISO8601 compliant date" },
+            "exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes specific IDs" },
+            "include": { "type": "array", "optional": true, "description": "Limit result set to specific IDs" },
+            "offset": { "type": "integer", "optional": true, "description": "Offset the result set by a specific number of items" },
+            "order": { "type": "string", "optional": true, "default": "desc", "description": "Order sort attribute ascending or descending" },
+            "orderby": { "type": "string", "optional": true, "default": "date", "description": "Sort collection by object attribute" },
+            "reviewer": { "type": "array", "optional": true, "description": "Limit result set to reviews assigned to specific user IDs" },
+            "reviewer_exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes reviews assigned to specific user IDs" },
+            "reviewer_email": { "type": "array", "optional": true, "description": "Limit result set to that from a specific author email" },
+            "product": { "type": "array", "optional": true, "description": "Limit result set to reviews assigned to specific product IDs" },
+            "status": { "type": "string", "optional": true, "default": "approved", "description": "Limit result set to reviews assigned a specific status" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/product_reviews/operations/createProductReview/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "webhooks": {
+      "operations": {
+        "createWebhook": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/webhooks",
+          "description": "Create a new webhook",
+          "requestFields": {
+            "name": { "type": "string", "required": true, "description": "A friendly name for the webhook" },
+            "status": { "type": "string", "optional": true, "default": "active", "description": "Webhook status. Options: active, paused, disabled" },
+            "topic": { "type": "string", "required": true, "description": "Webhook topic. Options: coupon.created, coupon.updated, coupon.deleted, customer.created, customer.updated, customer.deleted, order.created, order.updated, order.deleted, product.created, product.updated, product.deleted, action" },
+            "delivery_url": { "type": "string", "required": true, "description": "Webhook delivery URL" },
+            "secret": { "type": "string", "optional": true, "description": "Secret key used to generate a hash of the delivered webhook and provided in the request headers" }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "name": { "type": "string", "description": "A friendly name for the webhook" },
+            "status": { "type": "string", "description": "Webhook status" },
+            "topic": { "type": "string", "description": "Webhook topic" },
+            "resource": { "type": "string", "description": "Webhook resource" },
+            "event": { "type": "string", "description": "Webhook event" },
+            "hooks": { "type": "array", "description": "WooCommerce action names associated with the webhook" },
+            "delivery_url": { "type": "string", "description": "Webhook delivery URL" },
+            "secret": { "type": "string", "description": "Secret key used to generate a hash" },
+            "date_created": { "type": "string", "description": "The date the webhook was created" },
+            "date_created_gmt": { "type": "string", "description": "The date the webhook was created, as GMT" },
+            "date_modified": { "type": "string", "description": "The date the webhook was last modified" },
+            "date_modified_gmt": { "type": "string", "description": "The date the webhook was last modified, as GMT" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getWebhookById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/webhooks/{id}",
+          "description": "Retrieve and view a specific webhook by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/webhooks/operations/createWebhook/responseFields"
+          }
+        },
+        "updateWebhook": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/webhooks/{id}",
+          "description": "Update a webhook",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/webhooks/operations/createWebhook/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/webhooks/operations/createWebhook/responseFields"
+          }
+        },
+        "deleteWebhook": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/webhooks/{id}",
+          "description": "Delete a webhook",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Required to be true, as resource does not support trashing" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/webhooks/operations/createWebhook/responseFields"
+          }
+        },
+        "getAllWebhooks": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/webhooks",
+          "description": "List all webhooks",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "page": { "type": "integer", "optional": true, "default": 1, "description": "Current page of the collection" },
+            "per_page": { "type": "integer", "optional": true, "default": 10, "description": "Maximum number of items to be returned" },
+            "search": { "type": "string", "optional": true, "description": "Limit results to those matching a string" },
+            "after": { "type": "string", "optional": true, "description": "Limit response to resources published after a given ISO8601 compliant date" },
+            "before": { "type": "string", "optional": true, "description": "Limit response to resources published before a given ISO8601 compliant date" },
+            "exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes specific IDs" },
+            "include": { "type": "array", "optional": true, "description": "Limit result set to specific IDs" },
+            "offset": { "type": "integer", "optional": true, "description": "Offset the result set by a specific number of items" },
+            "order": { "type": "string", "optional": true, "default": "desc", "description": "Order sort attribute ascending or descending" },
+            "orderby": { "type": "string", "optional": true, "default": "date", "description": "Sort collection by object attribute" },
+            "status": { "type": "string", "optional": true, "description": "Limit result set to webhooks assigned a specific status" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/webhooks/operations/createWebhook/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "tax_rates": {
+      "operations": {
+        "createTaxRate": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/taxes",
+          "description": "Create a new tax rate",
+          "requestFields": {
+            "country": { "type": "string", "optional": true, "description": "Country ISO 3166 code" },
+            "state": { "type": "string", "optional": true, "description": "State code" },
+            "postcode": { "type": "string", "optional": true, "description": "Postcode/ZIP" },
+            "city": { "type": "string", "optional": true, "description": "City name" },
+            "rate": { "type": "string", "required": true, "description": "Tax rate" },
+            "name": { "type": "string", "optional": true, "description": "Tax rate name" },
+            "priority": { "type": "integer", "optional": true, "default": 1, "description": "Tax priority" },
+            "compound": { "type": "boolean", "optional": true, "default": false, "description": "Whether or not this is a compound rate" },
+            "shipping": { "type": "boolean", "optional": true, "default": true, "description": "Whether or not this tax rate also gets applied to shipping" },
+            "class": { "type": "string", "optional": true, "default": "standard", "description": "Tax class" }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "country": { "type": "string", "description": "Country ISO 3166 code" },
+            "state": { "type": "string", "description": "State code" },
+            "postcode": { "type": "string", "description": "Postcode/ZIP" },
+            "city": { "type": "string", "description": "City name" },
+            "rate": { "type": "string", "description": "Tax rate" },
+            "name": { "type": "string", "description": "Tax rate name" },
+            "priority": { "type": "integer", "description": "Tax priority" },
+            "compound": { "type": "boolean", "description": "Whether or not this is a compound rate" },
+            "shipping": { "type": "boolean", "description": "Whether or not this tax rate also gets applied to shipping" },
+            "order": { "type": "integer", "description": "Indicates the order that will appear in queries" },
+            "class": { "type": "string", "description": "Tax class" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getTaxRateById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/taxes/{id}",
+          "description": "Retrieve and view a specific tax rate by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/tax_rates/operations/createTaxRate/responseFields"
+          }
+        },
+        "updateTaxRate": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/taxes/{id}",
+          "description": "Update a tax rate",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/tax_rates/operations/createTaxRate/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/tax_rates/operations/createTaxRate/responseFields"
+          }
+        },
+        "deleteTaxRate": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/taxes/{id}",
+          "description": "Delete a tax rate",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Required to be true, as resource does not support trashing" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/tax_rates/operations/createTaxRate/responseFields"
+          }
+        },
+        "getAllTaxRates": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/taxes",
+          "description": "List all tax rates",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "page": { "type": "integer", "optional": true, "default": 1, "description": "Current page of the collection" },
+            "per_page": { "type": "integer", "optional": true, "default": 10, "description": "Maximum number of items to be returned" },
+            "search": { "type": "string", "optional": true, "description": "Limit results to those matching a string" },
+            "exclude": { "type": "array", "optional": true, "description": "Ensure result set excludes specific IDs" },
+            "include": { "type": "array", "optional": true, "description": "Limit result set to specific IDs" },
+            "offset": { "type": "integer", "optional": true, "description": "Offset the result set by a specific number of items" },
+            "order": { "type": "string", "optional": true, "default": "asc", "description": "Order sort attribute ascending or descending" },
+            "orderby": { "type": "string", "optional": true, "default": "order", "description": "Sort collection by object attribute" },
+            "class": { "type": "string", "optional": true, "default": "standard", "description": "Sort by tax class" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/tax_rates/operations/createTaxRate/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "shipping_zones": {
+      "operations": {
+        "createShippingZone": {
+          "method": "POST",
+          "endpoint": "/wp-json/wc/v3/shipping/zones",
+          "description": "Create a new shipping zone",
+          "requestFields": {
+            "name": { "type": "string", "required": true, "description": "Shipping zone name" },
+            "order": { "type": "integer", "optional": true, "description": "Shipping zone order" }
+          },
+          "responseFields": {
+            "id": { "type": "integer", "description": "Unique identifier for the resource" },
+            "name": { "type": "string", "description": "Shipping zone name" },
+            "order": { "type": "integer", "description": "Shipping zone order" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getShippingZoneById": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/shipping/zones/{id}",
+          "description": "Retrieve and view a specific shipping zone by ID",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/shipping_zones/operations/createShippingZone/responseFields"
+          }
+        },
+        "updateShippingZone": {
+          "method": "PUT",
+          "endpoint": "/wp-json/wc/v3/shipping/zones/{id}",
+          "description": "Update a shipping zone",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "requestFields": {
+            "$ref": "#/resources/shipping_zones/operations/createShippingZone/requestFields"
+          },
+          "responseFields": {
+            "$ref": "#/resources/shipping_zones/operations/createShippingZone/responseFields"
+          }
+        },
+        "deleteShippingZone": {
+          "method": "DELETE",
+          "endpoint": "/wp-json/wc/v3/shipping/zones/{id}",
+          "description": "Delete a shipping zone",
+          "pathParameters": {
+            "id": { "type": "integer", "required": true, "description": "Unique identifier for the resource" }
+          },
+          "queryParameters": {
+            "force": { "type": "boolean", "optional": true, "default": false, "description": "Required to be true, as resource does not support trashing" }
+          },
+          "responseFields": {
+            "$ref": "#/resources/shipping_zones/operations/createShippingZone/responseFields"
+          }
+        },
+        "getAllShippingZones": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/shipping/zones",
+          "description": "List all shipping zones",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/resources/shipping_zones/operations/createShippingZone/responseFields"
+            }
+          }
+        }
+      }
+    },
+    "reports": {
+      "operations": {
+        "getSalesReport": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/reports/sales",
+          "description": "Retrieve sales report",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "period": { "type": "string", "optional": true, "default": "week", "description": "Report period. Options: week, month, last_month, year" },
+            "date_min": { "type": "string", "optional": true, "description": "Return sales for a specific start date, the date needs to be in the YYYY-MM-DD format" },
+            "date_max": { "type": "string", "optional": true, "description": "Return sales for a specific end date, the date needs to be in the YYYY-MM-DD format" }
+          },
+          "responseFields": {
+            "total_sales": { "type": "string", "description": "Gross sales in the period" },
+            "net_sales": { "type": "string", "description": "Net sales in the period" },
+            "average_sales": { "type": "string", "description": "Average net daily sales" },
+            "total_orders": { "type": "integer", "description": "Total of orders placed" },
+            "total_items": { "type": "integer", "description": "Total of items purchased" },
+            "total_tax": { "type": "string", "description": "Total charged for taxes" },
+            "total_shipping": { "type": "string", "description": "Total charged for shipping" },
+            "total_refunds": { "type": "integer", "description": "Total of refunded orders" },
+            "total_discount": { "type": "string", "description": "Total of coupons used" },
+            "totals_grouped_by": { "type": "string", "description": "Group type" },
+            "totals": { "type": "object", "description": "Reports totals" },
+            "_links": { "type": "object", "description": "Links to related resources" }
+          }
+        },
+        "getTopSellersReport": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/reports/top_sellers",
+          "description": "Retrieve top sellers report",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" },
+            "period": { "type": "string", "optional": true, "default": "week", "description": "Report period. Options: week, month, last_month, year" },
+            "date_min": { "type": "string", "optional": true, "description": "Return sales for a specific start date, the date needs to be in the YYYY-MM-DD format" },
+            "date_max": { "type": "string", "optional": true, "description": "Return sales for a specific end date, the date needs to be in the YYYY-MM-DD format" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string", "description": "Product title" },
+                "product_id": { "type": "integer", "description": "Product ID" },
+                "quantity": { "type": "integer", "description": "Total number of purchases" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "data": {
+      "operations": {
+        "getAllContinents": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/data/continents",
+          "description": "List all continents",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string", "description": "2 character continent code" },
+                "name": { "type": "string", "description": "Full name of continent" },
+                "countries": { "type": "array", "description": "List of countries on this continent" }
+              }
+            }
+          }
+        },
+        "getAllCountries": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/data/countries",
+          "description": "List all countries",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string", "description": "ISO 3166 alpha-2 country code" },
+                "name": { "type": "string", "description": "Full name of country" },
+                "states": { "type": "array", "description": "List of states in this country" }
+              }
+            }
+          }
+        },
+        "getCountryStates": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/data/countries/{location}",
+          "description": "Retrieve and view states for a specific country",
+          "pathParameters": {
+            "location": { "type": "string", "required": true, "description": "ISO 3166 alpha-2 country code" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string", "description": "State code" },
+                "name": { "type": "string", "description": "Full name of state" }
+              }
+            }
+          }
+        },
+        "getAllCurrencies": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/data/currencies",
+          "description": "List all currencies",
+          "queryParameters": {
+            "context": { "type": "string", "optional": true, "default": "view", "description": "Scope under which the request is made" }
+          },
+          "responseFields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string", "description": "ISO 4217 currency code" },
+                "name": { "type": "string", "description": "Full name of currency" },
+                "symbol": { "type": "string", "description": "Currency symbol" }
+              }
+            }
+          }
+        },
+        "getCurrentCurrency": {
+          "method": "GET",
+          "endpoint": "/wp-json/wc/v3/data/currencies/current",
+          "description": "Retrieve current currency",
+          "responseFields": {
+            "code": { "type": "string", "description": "ISO 4217 currency code" },
+            "name": { "type": "string", "description": "Full name of currency" },
+            "symbol": { "type": "string", "description": "Currency symbol" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2567 @@
+{
+  "nuvemshop_tiendanube_api": {
+    "version": "2025-03",
+    "base_url": "https://api.tiendanube.com",
+    "authentication": "OAuth 2",
+    "content_type": "application/json; charset=utf-8",
+    "data_format": "JSON with snake_case keys",
+    "pagination": "30 results by default",
+    "entities": {
+      "abandoned_checkout": {
+        "description": "Created when customer reaches checkout's second step but doesn't finish the process",
+        "permissions": ["read_orders", "write_orders"],
+        "endpoints": {
+          "GET": {
+            "/abandoned_checkouts": {
+              "description": "Get all abandoned checkouts",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "token": "string",
+                  "store_id": "integer",
+                  "contact_email": "string",
+                  "contact_name": "string",
+                  "contact_phone": "string",
+                  "contact_identification": "string",
+                  "shipping_address": "object",
+                  "billing_address": "object",
+                  "products": "array",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/abandoned_checkouts/{id}": {
+              "description": "Get an abandoned checkout",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "store_id": "integer",
+                "contact_email": "string",
+                "contact_name": "string",
+                "contact_phone": "string",
+                "contact_identification": "string",
+                "shipping_address": "object",
+                "billing_address": "object",
+                "products": "array",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/abandoned_checkouts/{id}/coupons": {
+              "description": "Create a discount coupon for abandoned checkout",
+              "request_body": {
+                "coupon": {
+                  "code": "string",
+                  "type": "string",
+                  "value": "number"
+                }
+              },
+              "response_body": {
+                "id": "integer",
+                "code": "string",
+                "type": "string",
+                "value": "number",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "billing": {
+        "description": "Billing information and management",
+        "endpoints": {
+          "GET": {
+            "/billing": {
+              "description": "Get billing information",
+              "request_body": null,
+              "response_body": {
+                "plan": "string",
+                "status": "string",
+                "billing_cycle": "string",
+                "next_billing_date": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "business_rules": {
+        "description": "Define different business behaviors for shipping and payments domains through conditions",
+        "endpoints": {
+          "GET": {
+            "/business_rules": {
+              "description": "Get all business rules",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "string",
+                  "conditions": "array",
+                  "actions": "array",
+                  "active": "boolean"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/business_rules": {
+              "description": "Create a business rule",
+              "request_body": {
+                "name": "string",
+                "conditions": "array",
+                "actions": "array",
+                "active": "boolean"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "conditions": "array",
+                "actions": "array",
+                "active": "boolean",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "cart": {
+        "description": "Manipulation of shopping carts generated in storefront",
+        "endpoints": {
+          "GET": {
+            "/carts/{id}": {
+              "description": "Get cart details",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "items": "array",
+                "total": "number",
+                "currency": "string",
+                "created_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/carts": {
+              "description": "Create a new cart",
+              "request_body": {
+                "items": "array"
+              },
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "items": "array",
+                "total": "number",
+                "currency": "string",
+                "created_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/carts/{id}": {
+              "description": "Update cart",
+              "request_body": {
+                "items": "array"
+              },
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "items": "array",
+                "total": "number",
+                "currency": "string",
+                "updated_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "category": {
+        "description": "Product categories for store organization",
+        "endpoints": {
+          "GET": {
+            "/categories": {
+              "description": "Get all categories",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "object",
+                  "description": "object",
+                  "handle": "string",
+                  "parent": "integer",
+                  "subcategories": "array",
+                  "google_shopping_category": "string",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/categories/{id}": {
+              "description": "Get a specific category",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "parent": "integer",
+                "subcategories": "array",
+                "google_shopping_category": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/categories": {
+              "description": "Create a new category",
+              "request_body": {
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "parent": "integer",
+                "google_shopping_category": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "parent": "integer",
+                "subcategories": "array",
+                "google_shopping_category": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/categories/{id}": {
+              "description": "Update a category",
+              "request_body": {
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "parent": "integer",
+                "google_shopping_category": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "parent": "integer",
+                "subcategories": "array",
+                "google_shopping_category": "string",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/categories/{id}": {
+              "description": "Delete a category",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "category_custom_fields": {
+        "description": "Custom fields for categories",
+        "endpoints": {
+          "GET": {
+            "/categories/{category_id}/custom_fields": {
+              "description": "Get category custom fields",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "key": "string",
+                  "value": "string",
+                  "category_id": "integer"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/categories/{category_id}/custom_fields": {
+              "description": "Create category custom field",
+              "request_body": {
+                "key": "string",
+                "value": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "key": "string",
+                "value": "string",
+                "category_id": "integer"
+              }
+            }
+          }
+        }
+      },
+      "checkout": {
+        "description": "Payment options and checkout management (JavaScript Interface)",
+        "endpoints": {
+          "GET": {
+            "/checkout/{token}": {
+              "description": "Get checkout information",
+              "request_body": null,
+              "response_body": {
+                "token": "string",
+                "cart": "object",
+                "customer": "object",
+                "shipping": "object",
+                "payment": "object"
+              }
+            }
+          }
+        }
+      },
+      "checkout_sdk": {
+        "description": "SDK for checkout customization",
+        "endpoints": {
+          "GET": {
+            "/checkout_sdk/config": {
+              "description": "Get checkout SDK configuration",
+              "request_body": null,
+              "response_body": {
+                "config": "object",
+                "methods": "array"
+              }
+            }
+          }
+        }
+      },
+      "coupon": {
+        "description": "Discount coupons management",
+        "endpoints": {
+          "GET": {
+            "/coupons": {
+              "description": "Get all coupons",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "code": "string",
+                  "type": "string",
+                  "value": "number",
+                  "valid": "boolean",
+                  "used": "integer",
+                  "max_uses": "integer",
+                  "start_date": "datetime",
+                  "end_date": "datetime"
+                }
+              }
+            },
+            "/coupons/{id}": {
+              "description": "Get a specific coupon",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "code": "string",
+                "type": "string",
+                "value": "number",
+                "valid": "boolean",
+                "used": "integer",
+                "max_uses": "integer",
+                "start_date": "datetime",
+                "end_date": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/coupons": {
+              "description": "Create a new coupon",
+              "request_body": {
+                "code": "string",
+                "type": "string",
+                "value": "number",
+                "max_uses": "integer",
+                "start_date": "datetime",
+                "end_date": "datetime"
+              },
+              "response_body": {
+                "id": "integer",
+                "code": "string",
+                "type": "string",
+                "value": "number",
+                "valid": "boolean",
+                "used": "integer",
+                "max_uses": "integer",
+                "start_date": "datetime",
+                "end_date": "datetime",
+                "created_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/coupons/{id}": {
+              "description": "Update a coupon",
+              "request_body": {
+                "code": "string",
+                "type": "string",
+                "value": "number",
+                "max_uses": "integer",
+                "start_date": "datetime",
+                "end_date": "datetime"
+              },
+              "response_body": {
+                "id": "integer",
+                "code": "string",
+                "type": "string",
+                "value": "number",
+                "valid": "boolean",
+                "used": "integer",
+                "max_uses": "integer",
+                "start_date": "datetime",
+                "end_date": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/coupons/{id}": {
+              "description": "Delete a coupon",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "customer": {
+        "description": "Customer accounts and contact information",
+        "endpoints": {
+          "GET": {
+            "/customers": {
+              "description": "Get all customers",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "string",
+                  "email": "string",
+                  "identification": "string",
+                  "phone": "string",
+                  "note": "string",
+                  "default_address": "object",
+                  "addresses": "array",
+                  "billing_name": "string",
+                  "billing_phone": "string",
+                  "billing_address": "object",
+                  "extra": "object",
+                  "total_spent": "string",
+                  "total_spent_currency": "string",
+                  "last_order_id": "integer",
+                  "active": "boolean",
+                  "first_interaction": "datetime",
+                  "last_interaction": "datetime",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/customers/{id}": {
+              "description": "Get a specific customer",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "email": "string",
+                "identification": "string",
+                "phone": "string",
+                "note": "string",
+                "default_address": "object",
+                "addresses": "array",
+                "billing_name": "string",
+                "billing_phone": "string",
+                "billing_address": "object",
+                "extra": "object",
+                "total_spent": "string",
+                "total_spent_currency": "string",
+                "last_order_id": "integer",
+                "active": "boolean",
+                "first_interaction": "datetime",
+                "last_interaction": "datetime",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/customers": {
+              "description": "Create a new customer",
+              "request_body": {
+                "name": "string",
+                "email": "string",
+                "identification": "string",
+                "phone": "string",
+                "note": "string",
+                "default_address": "object",
+                "billing_name": "string",
+                "billing_phone": "string",
+                "billing_address": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "email": "string",
+                "identification": "string",
+                "phone": "string",
+                "note": "string",
+                "default_address": "object",
+                "addresses": "array",
+                "billing_name": "string",
+                "billing_phone": "string",
+                "billing_address": "object",
+                "extra": "object",
+                "total_spent": "string",
+                "total_spent_currency": "string",
+                "last_order_id": "integer",
+                "active": "boolean",
+                "first_interaction": "datetime",
+                "last_interaction": "datetime",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/customers/{id}": {
+              "description": "Update a customer",
+              "request_body": {
+                "name": "string",
+                "email": "string",
+                "identification": "string",
+                "phone": "string",
+                "note": "string",
+                "default_address": "object",
+                "billing_name": "string",
+                "billing_phone": "string",
+                "billing_address": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "email": "string",
+                "identification": "string",
+                "phone": "string",
+                "note": "string",
+                "default_address": "object",
+                "addresses": "array",
+                "billing_name": "string",
+                "billing_phone": "string",
+                "billing_address": "object",
+                "extra": "object",
+                "total_spent": "string",
+                "total_spent_currency": "string",
+                "last_order_id": "integer",
+                "active": "boolean",
+                "first_interaction": "datetime",
+                "last_interaction": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/customers/{id}": {
+              "description": "Delete a customer",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "customer_custom_fields": {
+        "description": "Custom fields for customers",
+        "endpoints": {
+          "GET": {
+            "/customers/{customer_id}/custom_fields": {
+              "description": "Get customer custom fields",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "key": "string",
+                  "value": "string",
+                  "customer_id": "integer"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/customers/{customer_id}/custom_fields": {
+              "description": "Create customer custom field",
+              "request_body": {
+                "key": "string",
+                "value": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "key": "string",
+                "value": "string",
+                "customer_id": "integer"
+              }
+            }
+          }
+        }
+      },
+      "discount": {
+        "description": "Create, manage and apply discount rules",
+        "endpoints": {
+          "GET": {
+            "/discounts": {
+              "description": "Get all discounts",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "string",
+                  "type": "string",
+                  "value": "number",
+                  "conditions": "object",
+                  "active": "boolean",
+                  "created_at": "datetime"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/discounts": {
+              "description": "Create a discount",
+              "request_body": {
+                "name": "string",
+                "type": "string",
+                "value": "number",
+                "conditions": "object",
+                "active": "boolean"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "type": "string",
+                "value": "number",
+                "conditions": "object",
+                "active": "boolean",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "disputes": {
+        "description": "Collect chargeback data from Payments partners when financial dispute is initiated",
+        "endpoints": {
+          "GET": {
+            "/disputes/{id}": {
+              "description": "Get dispute details",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "store_id": "integer",
+                "order_id": "integer",
+                "transaction_id": "integer",
+                "reason": "string",
+                "evidence": "object",
+                "amount": "number",
+                "status": "string",
+                "created_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/disputes": {
+              "description": "Create a dispute (up to 3 per store/order/transaction)",
+              "request_body": {
+                "store_id": "integer",
+                "order_id": "integer",
+                "transaction_id": "integer",
+                "reason": "string",
+                "evidence": "object",
+                "amount": "number"
+              },
+              "response_body": {
+                "id": "integer",
+                "store_id": "integer",
+                "order_id": "integer",
+                "transaction_id": "integer",
+                "reason": "string",
+                "evidence": "object",
+                "amount": "number",
+                "status": "string",
+                "created_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/disputes/{id}": {
+              "description": "Update dispute status and evidence",
+              "request_body": {
+                "status": "string",
+                "evidence": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "store_id": "integer",
+                "order_id": "integer",
+                "transaction_id": "integer",
+                "reason": "string",
+                "evidence": "object",
+                "amount": "number",
+                "status": "string",
+                "updated_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "draft_order": {
+        "description": "Create orders through outside channels",
+        "endpoints": {
+          "GET": {
+            "/draft_orders": {
+              "description": "Get all draft orders",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "token": "string",
+                  "store_id": "integer",
+                  "contact_email": "string",
+                  "contact_name": "string",
+                  "products": "array",
+                  "subtotal": "string",
+                  "total": "string",
+                  "created_at": "datetime"
+                }
+              }
+            },
+            "/draft_orders/{id}": {
+              "description": "Get a specific draft order",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "store_id": "integer",
+                "contact_email": "string",
+                "contact_name": "string",
+                "products": "array",
+                "subtotal": "string",
+                "total": "string",
+                "created_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/draft_orders": {
+              "description": "Create a draft order",
+              "request_body": {
+                "contact_email": "string",
+                "contact_name": "string",
+                "products": "array",
+                "shipping_address": "object",
+                "billing_address": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "store_id": "integer",
+                "contact_email": "string",
+                "contact_name": "string",
+                "products": "array",
+                "subtotal": "string",
+                "total": "string",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "email_templates": {
+        "description": "Email template management",
+        "endpoints": {
+          "GET": {
+            "/email_templates": {
+              "description": "Get all email templates",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "string",
+                  "subject": "string",
+                  "body": "string",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "fulfillment_order": {
+        "description": "Multiple shipments per order - each shipment described as Fulfillment Order",
+        "endpoints": {
+          "GET": {
+            "/orders/{order_id}/fulfillment_orders": {
+              "description": "Get fulfillment orders for an order",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "order_id": "integer",
+                  "status": "string",
+                  "tracking_number": "string",
+                  "tracking_url": "string",
+                  "items": "array",
+                  "created_at": "datetime"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/orders/{order_id}/fulfillment_orders": {
+              "description": "Create a fulfillment order",
+              "request_body": {
+                "tracking_number": "string",
+                "tracking_url": "string",
+                "items": "array",
+                "notify_customer": "boolean"
+              },
+              "response_body": {
+                "id": "integer",
+                "order_id": "integer",
+                "status": "string",
+                "tracking_number": "string",
+                "tracking_url": "string",
+                "items": "array",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "location": {
+        "description": "Store locations where physical goods reside",
+        "endpoints": {
+          "GET": {
+            "/locations": {
+              "description": "Get all locations",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "string",
+                  "address": "object",
+                  "phone": "string",
+                  "active": "boolean"
+                }
+              }
+            },
+            "/locations/{id}": {
+              "description": "Get a specific location",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "address": "object",
+                "phone": "string",
+                "active": "boolean"
+              }
+            }
+          },
+          "POST": {
+            "/locations": {
+              "description": "Create a location",
+              "request_body": {
+                "name": "string",
+                "address": "object",
+                "phone": "string",
+                "active": "boolean"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "address": "object",
+                "phone": "string",
+                "active": "boolean",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "metafields": {
+        "description": "Namespaced Key-Value store for Apps",
+        "endpoints": {
+          "GET": {
+            "/metafields": {
+              "description": "Get all metafields",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "namespace": "string",
+                  "key": "string",
+                  "value": "string",
+                  "owner_resource": "string",
+                  "owner_id": "integer"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/metafields": {
+              "description": "Create a metafield",
+              "request_body": {
+                "namespace": "string",
+                "key": "string",
+                "value": "string",
+                "owner_resource": "string",
+                "owner_id": "integer"
+              },
+              "response_body": {
+                "id": "integer",
+                "namespace": "string",
+                "key": "string",
+                "value": "string",
+                "owner_resource": "string",
+                "owner_id": "integer",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "order": {
+        "description": "Orders created when customer completes checkout or through API",
+        "endpoints": {
+          "GET": {
+            "/orders": {
+              "description": "Get all orders",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "token": "string",
+                  "store_id": "integer",
+                  "contact_email": "string",
+                  "contact_name": "string",
+                  "contact_phone": "string",
+                  "contact_identification": "string",
+                  "shipping_status": "string",
+                  "payment_status": "string",
+                  "gateway_link": "string",
+                  "shipping_address": "object",
+                  "billing_address": "object",
+                  "products": "array",
+                  "promotional_discount": "object",
+                  "subtotal": "string",
+                  "discount": "string",
+                  "discount_coupon": "string",
+                  "discount_gateway": "string",
+                  "shipping": "string",
+                  "shipping_option": "string",
+                  "shipping_option_code": "string",
+                  "shipping_option_reference": "string",
+                  "shipping_pickup_details": "object",
+                  "shipping_tracking_number": "string",
+                  "shipping_tracking_url": "string",
+                  "shipping_store_branch_name": "string",
+                  "shipping_pickup_type": "string",
+                  "shipping_suboption": "array",
+                  "extra": "object",
+                  "storefront": "string",
+                  "point_of_sale": "object",
+                  "total": "string",
+                  "free_shipping_from_value": "string",
+                  "free_shipping_from_value_currency": "string",
+                  "app_id": "integer",
+                  "created_at": "datetime",
+                  "updated_at": "datetime",
+                  "completed_at": "object",
+                  "next_action": "string",
+                  "payment_details": "object",
+                  "attributes": "array",
+                  "customer": "object",
+                  "products_count": "integer",
+                  "status": "string",
+                  "currency": "string",
+                  "language": "string",
+                  "gateway": "string",
+                  "shipping_carrier_name": "string",
+                  "shipping_address_alt": "string",
+                  "shipping_status_history": "array",
+                  "payment_status_history": "array",
+                  "fulfillment_status": "string",
+                  "packed_at": "datetime",
+                  "shipped_at": "datetime",
+                  "closed_at": "datetime",
+                  "cancelled_at": "datetime",
+                  "cancelled_reason": "string",
+                  "cancel_reason": "string"
+                }
+              }
+            },
+            "/orders/{id}": {
+              "description": "Get a specific order",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "store_id": "integer",
+                "contact_email": "string",
+                "contact_name": "string",
+                "contact_phone": "string",
+                "contact_identification": "string",
+                "shipping_status": "string",
+                "payment_status": "string",
+                "gateway_link": "string",
+                "shipping_address": "object",
+                "billing_address": "object",
+                "products": "array",
+                "promotional_discount": "object",
+                "subtotal": "string",
+                "discount": "string",
+                "discount_coupon": "string",
+                "discount_gateway": "string",
+                "shipping": "string",
+                "shipping_option": "string",
+                "shipping_option_code": "string",
+                "shipping_option_reference": "string",
+                "shipping_pickup_details": "object",
+                "shipping_tracking_number": "string",
+                "shipping_tracking_url": "string",
+                "shipping_store_branch_name": "string",
+                "shipping_pickup_type": "string",
+                "shipping_suboption": "array",
+                "extra": "object",
+                "storefront": "string",
+                "point_of_sale": "object",
+                "total": "string",
+                "free_shipping_from_value": "string",
+                "free_shipping_from_value_currency": "string",
+                "app_id": "integer",
+                "created_at": "datetime",
+                "updated_at": "datetime",
+                "completed_at": "object",
+                "next_action": "string",
+                "payment_details": "object",
+                "attributes": "array",
+                "customer": "object",
+                "products_count": "integer",
+                "status": "string",
+                "currency": "string",
+                "language": "string",
+                "gateway": "string",
+                "shipping_carrier_name": "string",
+                "shipping_address_alt": "string",
+                "shipping_status_history": "array",
+                "payment_status_history": "array",
+                "fulfillment_status": "string",
+                "packed_at": "datetime",
+                "shipped_at": "datetime",
+                "closed_at": "datetime",
+                "cancelled_at": "datetime",
+                "cancelled_reason": "string",
+                "cancel_reason": "string"
+              }
+            }
+          },
+          "POST": {
+            "/orders": {
+              "description": "Create a new order",
+              "request_body": {
+                "contact_email": "string",
+                "contact_name": "string",
+                "contact_phone": "string",
+                "contact_identification": "string",
+                "shipping_address": "object",
+                "billing_address": "object",
+                "products": "array",
+                "shipping_option": "string",
+                "payment_method": "string",
+                "gateway": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "store_id": "integer",
+                "contact_email": "string",
+                "contact_name": "string",
+                "contact_phone": "string",
+                "contact_identification": "string",
+                "shipping_status": "string",
+                "payment_status": "string",
+                "gateway_link": "string",
+                "shipping_address": "object",
+                "billing_address": "object",
+                "products": "array",
+                "promotional_discount": "object",
+                "subtotal": "string",
+                "discount": "string",
+                "discount_coupon": "string",
+                "discount_gateway": "string",
+                "shipping": "string",
+                "shipping_option": "string",
+                "shipping_option_code": "string",
+                "shipping_option_reference": "string",
+                "shipping_pickup_details": "object",
+                "shipping_tracking_number": "string",
+                "shipping_tracking_url": "string",
+                "shipping_store_branch_name": "string",
+                "shipping_pickup_type": "string",
+                "shipping_suboption": "array",
+                "extra": "object",
+                "storefront": "string",
+                "point_of_sale": "object",
+                "total": "string",
+                "free_shipping_from_value": "string",
+                "free_shipping_from_value_currency": "string",
+                "app_id": "integer",
+                "created_at": "datetime",
+                "updated_at": "datetime",
+                "completed_at": "object",
+                "next_action": "string",
+                "payment_details": "object",
+                "attributes": "array",
+                "customer": "object",
+                "products_count": "integer",
+                "status": "string",
+                "currency": "string",
+                "language": "string",
+                "gateway": "string",
+                "shipping_carrier_name": "string",
+                "shipping_address_alt": "string",
+                "shipping_status_history": "array",
+                "payment_status_history": "array",
+                "fulfillment_status": "string"
+              }
+            }
+          },
+          "PUT": {
+            "/orders/{id}": {
+              "description": "Update an order",
+              "request_body": {
+                "shipping_status": "string",
+                "payment_status": "string",
+                "shipping_tracking_number": "string",
+                "shipping_tracking_url": "string",
+                "notes": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "token": "string",
+                "store_id": "integer",
+                "contact_email": "string",
+                "contact_name": "string",
+                "contact_phone": "string",
+                "contact_identification": "string",
+                "shipping_status": "string",
+                "payment_status": "string",
+                "gateway_link": "string",
+                "shipping_address": "object",
+                "billing_address": "object",
+                "products": "array",
+                "promotional_discount": "object",
+                "subtotal": "string",
+                "discount": "string",
+                "discount_coupon": "string",
+                "discount_gateway": "string",
+                "shipping": "string",
+                "shipping_option": "string",
+                "shipping_option_code": "string",
+                "shipping_option_reference": "string",
+                "shipping_pickup_details": "object",
+                "shipping_tracking_number": "string",
+                "shipping_tracking_url": "string",
+                "shipping_store_branch_name": "string",
+                "shipping_pickup_type": "string",
+                "shipping_suboption": "array",
+                "extra": "object",
+                "storefront": "string",
+                "point_of_sale": "object",
+                "total": "string",
+                "free_shipping_from_value": "string",
+                "free_shipping_from_value_currency": "string",
+                "app_id": "integer",
+                "created_at": "datetime",
+                "updated_at": "datetime",
+                "completed_at": "object",
+                "next_action": "string",
+                "payment_details": "object",
+                "attributes": "array",
+                "customer": "object",
+                "products_count": "integer",
+                "status": "string",
+                "currency": "string",
+                "language": "string",
+                "gateway": "string",
+                "shipping_carrier_name": "string",
+                "shipping_address_alt": "string",
+                "shipping_status_history": "array",
+                "payment_status_history": "array",
+                "fulfillment_status": "string"
+              }
+            }
+          }
+        }
+      },
+      "order_custom_fields": {
+        "description": "Custom fields for orders",
+        "endpoints": {
+          "GET": {
+            "/orders/{order_id}/custom_fields": {
+              "description": "Get order custom fields",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "key": "string",
+                  "value": "string",
+                  "order_id": "integer"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/orders/{order_id}/custom_fields": {
+              "description": "Create order custom field",
+              "request_body": {
+                "key": "string",
+                "value": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "key": "string",
+                "value": "string",
+                "order_id": "integer"
+              }
+            }
+          }
+        }
+      },
+      "page": {
+        "description": "Custom pages management",
+        "endpoints": {
+          "GET": {
+            "/pages": {
+              "description": "Retrieve all custom pages from the store",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "object",
+                  "content": "object",
+                  "handle": "string",
+                  "seo_title": "object",
+                  "seo_description": "object",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/pages/{id}": {
+              "description": "Get a specific page",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "content": "object",
+                "handle": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/pages": {
+              "description": "Create a new page",
+              "request_body": {
+                "name": "object",
+                "content": "object",
+                "handle": "string",
+                "seo_title": "object",
+                "seo_description": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "content": "object",
+                "handle": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/pages/{id}": {
+              "description": "Update a page",
+              "request_body": {
+                "name": "object",
+                "content": "object",
+                "handle": "string",
+                "seo_title": "object",
+                "seo_description": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "content": "object",
+                "handle": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/pages/{id}": {
+              "description": "Delete a page",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "payment_option": {
+        "description": "Payment alternatives for consumers at checkout - can be integrated in two ways",
+        "endpoints": {
+          "GET": {
+            "/payment_options": {
+              "description": "Get all payment options",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "string",
+                  "logo": "string",
+                  "enabled": "boolean",
+                  "checkout_payment_options": "array"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/payment_options": {
+              "description": "Create a payment option",
+              "request_body": {
+                "name": "string",
+                "logo": "string",
+                "enabled": "boolean",
+                "checkout_payment_options": "array"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "logo": "string",
+                "enabled": "boolean",
+                "checkout_payment_options": "array",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "payment_provider": {
+        "description": "Payment Services Provider - entity providing resources and infrastructure for merchant-consumer transactions",
+        "endpoints": {
+          "GET": {
+            "/payment_providers": {
+              "description": "Get all payment providers",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "string",
+                  "enabled": "boolean",
+                  "supported_payment_methods": "array",
+                  "authentication": "object"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/payment_providers": {
+              "description": "Create a payment provider",
+              "request_body": {
+                "name": "string",
+                "enabled": "boolean",
+                "supported_payment_methods": "array",
+                "authentication": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "enabled": "boolean",
+                "supported_payment_methods": "array",
+                "authentication": "object",
+                "created_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "product": {
+        "description": "Items for sale in store - can be goods or services. Multi-inventory support available",
+        "permissions": ["read_products", "write_products"],
+        "endpoints": {
+          "GET": {
+            "/products": {
+              "description": "Receive a list of all Products (up to 30 results by default, use pagination)",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "object",
+                  "description": "object",
+                  "handle": "string",
+                  "attributes": "array",
+                  "published": "boolean",
+                  "free_shipping": "boolean",
+                  "requires_shipping": "boolean",
+                  "canonical_url": "string",
+                  "video_url": "string",
+                  "seo_title": "object",
+                  "seo_description": "object",
+                  "brand": "string",
+                  "created_at": "datetime",
+                  "updated_at": "datetime",
+                  "variants": "array",
+                  "tags": "string",
+                  "images": "array",
+                  "categories": "array"
+                }
+              }
+            },
+            "/products/{id}": {
+              "description": "Get a specific product",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "attributes": "array",
+                "published": "boolean",
+                "free_shipping": "boolean",
+                "requires_shipping": "boolean",
+                "canonical_url": "string",
+                "video_url": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "brand": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime",
+                "variants": "array",
+                "tags": "string",
+                "images": "array",
+                "categories": "array"
+              }
+            }
+          },
+          "POST": {
+            "/products": {
+                "description": "Create a new product",
+              "request_body": {
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "attributes": "array",
+                "published": "boolean",
+                "free_shipping": "boolean",
+                "requires_shipping": "boolean",
+                "canonical_url": "string",
+                "video_url": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "brand": "string",
+                "variants": "array",
+                "tags": "string",
+                "images": "array",
+                "categories": "array"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "attributes": "array",
+                "published": "boolean",
+                "free_shipping": "boolean",
+                "requires_shipping": "boolean",
+                "canonical_url": "string",
+                "video_url": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "brand": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime",
+                "variants": "array",
+                "tags": "string",
+                "images": "array",
+                "categories": "array"
+              }
+            }
+          },
+          "PUT": {
+            "/products/{id}": {
+              "description": "Update a product",
+              "request_body": {
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "attributes": "array",
+                "published": "boolean",
+                "free_shipping": "boolean",
+                "requires_shipping": "boolean",
+                "canonical_url": "string",
+                "video_url": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "brand": "string",
+                "variants": "array",
+                "tags": "string",
+                "images": "array",
+                "categories": "array"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "description": "object",
+                "handle": "string",
+                "attributes": "array",
+                "published": "boolean",
+                "free_shipping": "boolean",
+                "requires_shipping": "boolean",
+                "canonical_url": "string",
+                "video_url": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "brand": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime",
+                "variants": "array",
+                "tags": "string",
+                "images": "array",
+                "categories": "array"
+              }
+            }
+          },
+          "DELETE": {
+            "/products/{id}": {
+              "description": "Delete a product",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "product_image": {
+        "description": "Product images - single most important design aspect of any store",
+        "endpoints": {
+          "GET": {
+            "/products/{product_id}/images": {
+              "description": "Get all product images",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "product_id": "integer",
+                  "src": "string",
+                  "position": "integer",
+                  "alt": "array",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/products/{product_id}/images/{id}": {
+              "description": "Get a specific product image",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "product_id": "integer",
+                "src": "string",
+                "position": "integer",
+                "alt": "array",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/products/{product_id}/images": {
+              "description": "Add an image to a product",
+              "request_body": {
+                "src": "string",
+                "position": "integer",
+                "alt": "array"
+              },
+              "response_body": {
+                "id": "integer",
+                "product_id": "integer",
+                "src": "string",
+                "position": "integer",
+                "alt": "array",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/products/{product_id}/images/{id}": {
+              "description": "Update a product image",
+              "request_body": {
+                "src": "string",
+                "position": "integer",
+                "alt": "array"
+              },
+              "response_body": {
+                "id": "integer",
+                "product_id": "integer",
+                "src": "string",
+                "position": "integer",
+                "alt": "array",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/products/{product_id}/images/{id}": {
+              "description": "Delete a product image",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "product_variant": {
+        "description": "Product variants for grouping items with different attributes (e.g., sizes, colors). Max 1000 variants per product",
+        "endpoints": {
+          "GET": {
+            "/products/{product_id}/variants": {
+              "description": "Get all product variants",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "image_id": "integer",
+                  "product_id": "integer",
+                  "position": "integer",
+                  "price": "string",
+                  "compare_at_price": "string",
+                  "promotional_price": "string",
+                  "stock_management": "boolean",
+                  "stock": "integer",
+                  "weight": "string",
+                  "width": "string",
+                  "height": "string",
+                  "depth": "string",
+                  "sku": "string",
+                  "values": "array",
+                  "barcode": "string",
+                  "mpn": "string",
+                  "age_group": "string",
+                  "gender": "string",
+                  "size_type": "string",
+                  "size_system": "string",
+                  "mobile_size_type": "string",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/products/{product_id}/variants/{id}": {
+              "description": "Get a specific product variant",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "image_id": "integer",
+                "product_id": "integer",
+                "position": "integer",
+                "price": "string",
+                "compare_at_price": "string",
+                "promotional_price": "string",
+                "stock_management": "boolean",
+                "stock": "integer",
+                "weight": "string",
+                "width": "string",
+                "height": "string",
+                "depth": "string",
+                "sku": "string",
+                "values": "array",
+                "barcode": "string",
+                "mpn": "string",
+                "age_group": "string",
+                "gender": "string",
+                "size_type": "string",
+                "size_system": "string",
+                "mobile_size_type": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/products/{product_id}/variants": {
+              "description": "Create a product variant",
+              "request_body": {
+                "image_id": "integer",
+                "position": "integer",
+                "price": "string",
+                "compare_at_price": "string",
+                "promotional_price": "string",
+                "stock_management": "boolean",
+                "stock": "integer",
+                "weight": "string",
+                "width": "string",
+                "height": "string",
+                "depth": "string",
+                "sku": "string",
+                "values": "array",
+                "barcode": "string",
+                "mpn": "string",
+                "age_group": "string",
+                "gender": "string",
+                "size_type": "string",
+                "size_system": "string",
+                "mobile_size_type": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "image_id": "integer",
+                "product_id": "integer",
+                "position": "integer",
+                "price": "string",
+                "compare_at_price": "string",
+                "promotional_price": "string",
+                "stock_management": "boolean",
+                "stock": "integer",
+                "weight": "string",
+                "width": "string",
+                "height": "string",
+                "depth": "string",
+                "sku": "string",
+                "values": "array",
+                "barcode": "string",
+                "mpn": "string",
+                "age_group": "string",
+                "gender": "string",
+                "size_type": "string",
+                "size_system": "string",
+                "mobile_size_type": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/products/{product_id}/variants/{id}": {
+              "description": "Update a product variant",
+              "request_body": {
+                "image_id": "integer",
+                "position": "integer",
+                "price": "string",
+                "compare_at_price": "string",
+                "promotional_price": "string",
+                "stock_management": "boolean",
+                "stock": "integer",
+                "weight": "string",
+                "width": "string",
+                "height": "string",
+                "depth": "string",
+                "sku": "string",
+                "values": "array",
+                "barcode": "string",
+                "mpn": "string",
+                "age_group": "string",
+                "gender": "string",
+                "size_type": "string",
+                "size_system": "string",
+                "mobile_size_type": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "image_id": "integer",
+                "product_id": "integer",
+                "position": "integer",
+                "price": "string",
+                "compare_at_price": "string",
+                "promotional_price": "string",
+                "stock_management": "boolean",
+                "stock": "integer",
+                "weight": "string",
+                "width": "string",
+                "height": "string",
+                "depth": "string",
+                "sku": "string",
+                "values": "array",
+                "barcode": "string",
+                "mpn": "string",
+                "age_group": "string",
+                "gender": "string",
+                "size_type": "string",
+                "size_system": "string",
+                "mobile_size_type": "string",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/products/{product_id}/variants/{id}": {
+              "description": "Delete a product variant",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "product_custom_fields": {
+        "description": "Custom fields for products",
+        "endpoints": {
+          "GET": {
+            "/products/{product_id}/custom_fields": {
+              "description": "Get product custom fields",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "key": "string",
+                  "value": "string",
+                  "product_id": "integer"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/products/{product_id}/custom_fields": {
+              "description": "Create product custom field",
+              "request_body": {
+                "key": "string",
+                "value": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "key": "string",
+                "value": "string",
+                "product_id": "integer"
+              }
+            }
+          }
+        }
+      },
+      "product_variant_custom_fields": {
+        "description": "Custom fields for product variants",
+        "endpoints": {
+          "GET": {
+            "/products/{product_id}/variants/{variant_id}/custom_fields": {
+              "description": "Get product variant custom fields",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "key": "string",
+                  "value": "string",
+                  "variant_id": "integer"
+                }
+              }
+            }
+          },
+          "POST": {
+            "/products/{product_id}/variants/{variant_id}/custom_fields": {
+              "description": "Create product variant custom field",
+              "request_body": {
+                "key": "string",
+                "value": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "key": "string",
+                "value": "string",
+                "variant_id": "integer"
+              }
+            }
+          }
+        }
+      },
+      "script": {
+        "description": "Register custom JavaScript files to be loaded and executed in merchant's storefront (products and payment pages)",
+        "endpoints": {
+          "GET": {
+            "/scripts": {
+              "description": "Get all scripts",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "src": "string",
+                  "event": "string",
+                  "where": "string",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/scripts/{id}": {
+              "description": "Get a specific script",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "src": "string",
+                "event": "string",
+                "where": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/scripts": {
+              "description": "Create a script",
+              "request_body": {
+                "src": "string",
+                "event": "string",
+                "where": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "src": "string",
+                "event": "string",
+                "where": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/scripts/{id}": {
+              "description": "Update a script",
+              "request_body": {
+                "src": "string",
+                "event": "string",
+                "where": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "src": "string",
+                "event": "string",
+                "where": "string",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/scripts/{id}": {
+              "description": "Delete a script",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "shipping_carrier": {
+        "description": "Shipping carrier (or shipping company) service providing real-time shipping rates for merchants",
+        "endpoints": {
+          "GET": {
+            "/shipping_carriers": {
+              "description": "Get all shipping carriers",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "name": "string",
+                  "callback_url": "string",
+                  "types": "array",
+                  "active": "boolean",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/shipping_carriers/{id}": {
+              "description": "Get a specific shipping carrier",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "callback_url": "string",
+                "types": "array",
+                "active": "boolean",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/shipping_carriers": {
+              "description": "Create a shipping carrier",
+              "request_body": {
+                "name": "string",
+                "callback_url": "string",
+                "types": "array",
+                "active": "boolean"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "callback_url": "string",
+                "types": "array",
+                "active": "boolean",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/shipping_carriers/{id}": {
+              "description": "Update a shipping carrier",
+              "request_body": {
+                "name": "string",
+                "callback_url": "string",
+                "types": "array",
+                "active": "boolean"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "string",
+                "callback_url": "string",
+                "types": "array",
+                "active": "boolean",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/shipping_carriers/{id}": {
+              "description": "Delete a shipping carrier",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      },
+      "store": {
+        "description": "General settings and information about a Tiendanube/Nuvemshop's store",
+        "endpoints": {
+          "GET": {
+            "/store": {
+              "description": "Get store information",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "original_domain": "string",
+                "domain": "string",
+                "email": "string",
+                "identification": "string",
+                "phone": "string",
+                "address": "string",
+                "city": "string",
+                "zipcode": "string",
+                "province": "string",
+                "country": "string",
+                "latitude": "string",
+                "longitude": "string",
+                "timezone": "string",
+                "currency": "string",
+                "language": "string",
+                "country_code": "string",
+                "plan_name": "string",
+                "logo": "string",
+                "description": "object",
+                "facebook": "string",
+                "google_plus": "string",
+                "twitter": "string",
+                "instagram": "string",
+                "pinterest": "string",
+                "business_id": "string",
+                "business_name": "string",
+                "business_address": "string",
+                "business_phone": "string",
+                "business_hours": "object",
+                "logo_light": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "google_analytics_tracking_id": "string",
+                "google_tag_manager_tracking_id": "string",
+                "facebook_pixel_tracking_id": "string",
+                "google_adwords_tracking_id": "string",
+                "head_content": "string",
+                "google_merchant_center_id": "string",
+                "facebook_catalog_id": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/store": {
+              "description": "Update store information",
+              "request_body": {
+                "name": "object",
+                "email": "string",
+                "identification": "string",
+                "phone": "string",
+                "address": "string",
+                "city": "string",
+                "zipcode": "string",
+                "province": "string",
+                "country": "string",
+                "latitude": "string",
+                "longitude": "string",
+                "timezone": "string",
+                "currency": "string",
+                "language": "string",
+                "logo": "string",
+                "description": "object",
+                "facebook": "string",
+                "google_plus": "string",
+                "twitter": "string",
+                "instagram": "string",
+                "pinterest": "string",
+                "business_id": "string",
+                "business_name": "string",
+                "business_address": "string",
+                "business_phone": "string",
+                "business_hours": "object",
+                "logo_light": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "google_analytics_tracking_id": "string",
+                "google_tag_manager_tracking_id": "string",
+                "facebook_pixel_tracking_id": "string",
+                "google_adwords_tracking_id": "string",
+                "head_content": "string",
+                "google_merchant_center_id": "string",
+                "facebook_catalog_id": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "name": "object",
+                "original_domain": "string",
+                "domain": "string",
+                "email": "string",
+                "identification": "string",
+                "phone": "string",
+                "address": "string",
+                "city": "string",
+                "zipcode": "string",
+                "province": "string",
+                "country": "string",
+                "latitude": "string",
+                "longitude": "string",
+                "timezone": "string",
+                "currency": "string",
+                "language": "string",
+                "country_code": "string",
+                "plan_name": "string",
+                "logo": "string",
+                "description": "object",
+                "facebook": "string",
+                "google_plus": "string",
+                "twitter": "string",
+                "instagram": "string",
+                "pinterest": "string",
+                "business_id": "string",
+                "business_name": "string",
+                "business_address": "string",
+                "business_phone": "string",
+                "business_hours": "object",
+                "logo_light": "string",
+                "seo_title": "object",
+                "seo_description": "object",
+                "google_analytics_tracking_id": "string",
+                "google_tag_manager_tracking_id": "string",
+                "facebook_pixel_tracking_id": "string",
+                "google_adwords_tracking_id": "string",
+                "head_content": "string",
+                "google_merchant_center_id": "string",
+                "facebook_catalog_id": "string",
+                "updated_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "transaction": {
+        "description": "Money movements modeled through Transaction objects with different types (credit card, debit card, boleto, wire transfer, etc.) Each Transaction type has a Finite State Machine (FSM) defining current status",
+        "endpoints": {
+          "GET": {
+            "/orders/{order_id}/transactions": {
+              "description": "Get all transactions for an order",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "order_id": "integer",
+                  "type": "string",
+                  "status": "string",
+                  "currency": "string",
+                  "amount": "string",
+                  "gateway": "string",
+                  "gateway_id": "string",
+                  "gateway_data": "object",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/orders/{order_id}/transactions/{id}": {
+              "description": "Get a specific transaction",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "order_id": "integer",
+                "type": "string",
+                "status": "string",
+                "currency": "string",
+                "amount": "string",
+                "gateway": "string",
+                "gateway_id": "string",
+                "gateway_data": "object",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/orders/{order_id}/transactions": {
+              "description": "Create a transaction",
+              "request_body": {
+                "type": "string",
+                "status": "string",
+                "currency": "string",
+                "amount": "string",
+                "gateway": "string",
+                "gateway_id": "string",
+                "gateway_data": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "order_id": "integer",
+                "type": "string",
+                "status": "string",
+                "currency": "string",
+                "amount": "string",
+                "gateway": "string",
+                "gateway_id": "string",
+                "gateway_data": "object",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/orders/{order_id}/transactions/{id}": {
+              "description": "Update a transaction",
+              "request_body": {
+                "status": "string",
+                "gateway_data": "object"
+              },
+              "response_body": {
+                "id": "integer",
+                "order_id": "integer",
+                "type": "string",
+                "status": "string",
+                "currency": "string",
+                "amount": "string",
+                "gateway": "string",
+                "gateway_id": "string",
+                "gateway_data": "object",
+                "updated_at": "datetime"
+              }
+            }
+          }
+        }
+      },
+      "webhook": {
+        "description": "Tool to receive notifications for certain events. Register https URL to receive event data stored in JSON",
+        "supported_events": [
+          "app/uninstalled",
+          "app/suspended", 
+          "app/resumed",
+          "order/created",
+          "order/updated",
+          "order/paid",
+          "order/cancelled",
+          "order/fulfilled",
+          "order/packed",
+          "order/shipped",
+          "order/delivered",
+          "product/created",
+          "product/updated",
+          "product/deleted",
+          "category/created",
+          "category/updated",
+          "category/deleted",
+          "customer/created",
+          "customer/updated",
+          "customer/deleted"
+        ],
+        "endpoints": {
+          "GET": {
+            "/webhooks": {
+              "description": "Get all webhooks",
+              "request_body": null,
+              "response_body": {
+                "type": "array",
+                "items": {
+                  "id": "integer",
+                  "url": "string",
+                  "event": "string",
+                  "created_at": "datetime",
+                  "updated_at": "datetime"
+                }
+              }
+            },
+            "/webhooks/{id}": {
+              "description": "Get a specific webhook",
+              "request_body": null,
+              "response_body": {
+                "id": "integer",
+                "url": "string",
+                "event": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "POST": {
+            "/webhooks": {
+              "description": "Create a webhook",
+              "request_body": {
+                "url": "string",
+                "event": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "url": "string",
+                "event": "string",
+                "created_at": "datetime",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "PUT": {
+            "/webhooks/{id}": {
+              "description": "Update a webhook",
+              "request_body": {
+                "url": "string",
+                "event": "string"
+              },
+              "response_body": {
+                "id": "integer",
+                "url": "string",
+                "event": "string",
+                "updated_at": "datetime"
+              }
+            }
+          },
+          "DELETE": {
+            "/webhooks/{id}": {
+              "description": "Delete a webhook",
+              "request_body": null,
+              "response_body": {
+                "status": "success"
+              }
+            }
+          }
+        }
+      }
+    },
+    "common_headers": {
+      "Authorization": "Bearer {access_token}",
+      "Content-Type": "application/json; charset=utf-8",
+      "User-Agent": "{application_name} ({contact_info})"
+    },
+    "pagination": {
+      "default_limit": 30,
+      "parameters": {
+        "page": "integer",
+        "per_page": "integer (max 200)",
+        "since_id": "integer",
+        "created_at_min": "datetime",
+        "created_at_max": "datetime",
+        "updated_at_min": "datetime", 
+        "updated_at_max": "datetime"
+      },
+      "response_headers": {
+        "Link": "Contains pagination URLs (next, last, first, prev)"
+      }
+    },
+    "http_verbs": {
+      "GET": "Retrieve resources",
+      "POST": "Create new resources", 
+      "PUT": "Update existing resources",
+      "DELETE": "Remove resources"
+    },
+    "error_responses": {
+      "400": "Bad Request - Invalid request format",
+      "401": "Unauthorized - Invalid or missing authentication",
+      "403": "Forbidden - Insufficient permissions",
+      "404": "Not Found - Resource doesn't exist",
+      "415": "Unsupported Media Type - Missing Content-Type header",
+      "422": "Unprocessable Entity - Validation errors",
+      "429": "Too Many Requests - Rate limit exceeded",
+      "500": "Internal Server Error - Server error"
+    },
+    "rate_limiting": {
+      "default_limit": "2 requests per second per store",
+      "burst_limit": "40 requests per 20-second window",
+      "headers": {
+        "X-Rate-Limit-Limit": "Current rate limit",
+        "X-Rate-Limit-Remaining": "Remaining requests",
+        "X-Rate-Limit-Reset": "Time when rate limit resets"
+      }
+    },
+    "webhooks_security": {
+      "verification": "HMAC-SHA256 signature in X-Linkedstore-Hmac-Sha256 header",
+      "restrictions": "No localhost/tiendanube/nuvemshop domains allowed"
+    },
+    "multi_inventory_support": {
+      "note": "New Product API with multi-inventory support being rolled out",
+      "recommendation": "Use new version for any new development"
+    },
+    "permissions_scopes": {
+        "read_content": "Read store content (pages, blog posts)",
+      "write_content": "Create and modify store content",
+      "read_products": "Read product information",
+      "write_products": "Create and modify products",
+      "read_orders": "Read order information",
+      "write_orders": "Create and modify orders",
+      "read_customers": "Read customer information",
+      "write_customers": "Create and modify customers",
+      "read_shipping": "Read shipping information",
+      "write_shipping": "Modify shipping settings",
+      "read_themes": "Read theme information",
+      "write_themes": "Modify themes",
+      "read_scripts": "Read script tags",
+      "write_scripts": "Create and modify script tags",
+      "read_checkouts": "Read checkout information",
+      "write_checkouts": "Modify checkout settings",
+      "read_reports": "Read analytics and reports",
+      "read_price_lists": "Read price list information",
+      "write_price_lists": "Create and modify price lists",
+      "read_inventory": "Read inventory information",
+      "write_inventory": "Modify inventory levels"
+    },
+    "data_formats": {
+      "datetime": "ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ)",
+      "currency": "String with decimal point separator",
+      "multilingual_fields": "Object with language codes as keys",
+      "boolean": "true/false",
+      "arrays": "JSON arrays",
+      "objects": "JSON objects"
+    },
+    "special_considerations": {
+      "abandoned_checkout_timing": "Cart can be created up to 6 hours after purchase abandonment",
+      "abandoned_checkout_retention": "Carts accessible for 30 days after abandonment",
+      "product_variant_limit": "Maximum 1000 variants per product",
+      "dispute_limit": "Maximum 3 disputes per store/order/transaction combination",
+      "pagination_max": "Maximum 200 results per page",
+      "webhook_domain_restrictions": "Cannot use localhost, tiendanube, or nuvemshop domains",
+      "multi_inventory_migration": "New Product API with multi-inventory support being rolled out"
+    },
+    "common_query_parameters": {
+      "fields": "Comma-separated list of fields to include in response",
+      "q": "Search query string",
+      "handle": "Product/category handle for filtering",
+      "published": "Filter by published status (true/false)",
+      "category_id": "Filter products by category ID",
+      "created_at_min": "Filter by minimum creation date",
+      "created_at_max": "Filter by maximum creation date",
+      "updated_at_min": "Filter by minimum update date",
+      "updated_at_max": "Filter by maximum update date",
+      "status": "Filter by status (varies by resource)",
+      "email": "Filter customers by email",
+      "name": "Filter by name",
+      "sku": "Filter variants by SKU"
+    },
+    "webhook_payload_structure": {
+      "event": "Event name (e.g., 'order/created')",
+      "store_id": "Store identifier",
+      "object_id": "ID of the affected resource",
+      "object_type": "Type of resource (order, product, etc.)",
+      "created_at": "Timestamp of the event",
+      "data": "Complete object data for the affected resource"
+    },
+    "testing_recommendations": {
+      "development_tools": ["RequestCatcher", "PostCatcher"],
+      "sandbox_environment": "Use test stores for development",
+      "webhook_testing": "Use public URLs for webhook endpoints during development",
+      "rate_limit_testing": "Test with rate limiting in mind",
+      "error_handling": "Implement proper error handling for all HTTP status codes"
+    },
+    "best_practices": {
+      "authentication": "Store access tokens securely and refresh as needed",
+      "error_handling": "Always check HTTP status codes and handle errors gracefully",
+      "rate_limiting": "Implement exponential backoff for rate limit errors",
+      "webhooks": "Verify webhook signatures for security",
+      "pagination": "Use Link header URLs instead of constructing your own",
+      "data_validation": "Validate all input data before sending to API",
+      "logging": "Log API requests and responses for debugging",
+      "caching": "Cache frequently accessed data to reduce API calls",
+      "bulk_operations": "Use batch operations when available for efficiency"
+    },
+    "integration_patterns": {
+      "order_management": "Monitor order webhooks for real-time updates",
+      "inventory_sync": "Use product/variant endpoints for inventory management",
+      "customer_service": "Leverage customer and order APIs for support tools",
+      "analytics": "Combine multiple endpoints for comprehensive reporting",
+      "marketing": "Use customer data and order history for targeted campaigns",
+      "fulfillment": "Integrate with fulfillment_order endpoints for shipping"
+    }
+  }
+}

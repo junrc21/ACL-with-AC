@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # ACL Service
+  acl-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: acl-service
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgresql://acl_user:acl_password@postgres:5432/acl_db?schema=public
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=info
+      - LOG_PRETTY=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - acl-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: acl-postgres
+    environment:
+      - POSTGRES_DB=acl_db
+      - POSTGRES_USER=acl_user
+      - POSTGRES_PASSWORD=acl_password
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U acl_user -d acl_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - acl-network
+
+  # Redis for caching and rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: acl-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - acl-network
+
+  # Prisma Studio (development only)
+  prisma-studio:
+    image: node:18-alpine
+    container_name: acl-prisma-studio
+    working_dir: /app
+    ports:
+      - "5555:5555"
+    environment:
+      - DATABASE_URL=postgresql://acl_user:acl_password@postgres:5432/acl_db?schema=public
+    volumes:
+      - .:/app
+    command: sh -c "npm install && npx prisma studio --hostname 0.0.0.0"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - development
+    networks:
+      - acl-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  acl-network:
+    driver: bridge

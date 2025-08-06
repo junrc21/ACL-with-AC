@@ -67,6 +67,24 @@ enum UserRole {
   ADMIN
 }
 
+enum CustomerRole {
+  CUSTOMER
+  BUYER
+  PRODUCER
+  AFFILIATE
+  CO_PRODUCER
+  SUBSCRIBER
+  ADMINISTRATOR
+}
+
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+  ARCHIVED
+}
+
 // Core Models
 
 model Store {
@@ -97,41 +115,42 @@ model Store {
 }
 
 model Customer {
-  id                String    @id @default(cuid())
-  storeId           String
-  platform          Platform
-  externalId        String    // Platform-specific customer ID
-  
-  // Core customer information
-  email             String
-  firstName         String?
-  lastName          String?
-  fullName          String?
-  phone             String?
-  identification    String?   // CPF, CNPJ, etc.
-  
-  // Customer status and metrics
-  isActive          Boolean   @default(true)
-  totalSpent        Decimal?  @db.Decimal(10, 2)
-  totalOrders       Int       @default(0)
-  
-  // Timestamps
-  firstInteraction  DateTime?
-  lastInteraction   DateTime?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  
-  // Platform-specific metadata
-  metadata          Json?
-  
+  id                  String        @id @default(uuid())
+  platform            Platform
+  externalId          String
+  storeId             String?
+  email               String
+  firstName           String?
+  lastName            String?
+  fullName            String?
+  username            String?
+  role                CustomerRole
+  status              CustomerStatus
+  isPayingCustomer    Boolean?
+  isVerified          Boolean?
+  avatarUrl           String?
+  note                String?
+  totalSpent          Decimal?
+  currency            String?
+  orderCount          Int?
+  lastOrderDate       DateTime?
+  metadata            Json?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  lastLoginAt         DateTime?
+
   // Relationships
-  store             Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  orders            Order[]
-  addresses         Address[]
-  
-  @@unique([platform, storeId, externalId])
-  @@index([email])
+  store               Store?        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders              Order[]
+  addresses           Address[]
+
+  @@unique([platform, externalId, storeId])
   @@index([platform, storeId])
+  @@index([email])
+  @@index([status])
+  @@index([role])
+  @@index([isPayingCustomer])
+  @@index([createdAt])
   @@map("customers")
 }
 

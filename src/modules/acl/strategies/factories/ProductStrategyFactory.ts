@@ -34,13 +34,13 @@ export class ProductStrategyFactory implements IProductStrategyFactory {
       const woocommerceStrategy = new WoocommerceProductStrategy();
       this.strategies.set(Platform.WOOCOMMERCE, woocommerceStrategy);
 
-      this.logger.info({
+      this.logger?.info({
         platforms: Array.from(this.strategies.keys()),
         count: this.strategies.size,
       }, 'Product strategies initialized successfully');
 
     } catch (error) {
-      this.logger.error({ error }, 'Failed to initialize product strategies');
+      this.logger?.error({ error }, 'Failed to initialize product strategies');
       throw error;
     }
   }
@@ -53,14 +53,14 @@ export class ProductStrategyFactory implements IProductStrategyFactory {
 
     if (!strategy) {
       const error = new Error(`No product strategy found for platform: ${platform}`);
-      this.logger.error({
+      this.logger?.error({
         platform,
         availablePlatforms: Array.from(this.strategies.keys()),
       }, 'Product strategy not found');
       throw error;
     }
 
-    this.logger.debug({ platform }, 'Product strategy created');
+    this.logger?.debug({ platform }, 'Product strategy created');
     return strategy;
   }
 
@@ -77,7 +77,7 @@ export class ProductStrategyFactory implements IProductStrategyFactory {
   isSupported(platform: Platform): boolean {
     const isSupported = this.strategies.has(platform);
     
-    this.logger.debug({
+    this.logger?.debug({
       platform,
       isSupported,
       availablePlatforms: Array.from(this.strategies.keys()),
@@ -131,7 +131,7 @@ export class ProductStrategyFactory implements IProductStrategyFactory {
 
     for (const method of requiredMethods) {
       if (typeof (strategy as any)[method] !== 'function') {
-        this.logger.error({
+        this.logger?.error({
           platform,
           missingMethod: method,
         }, 'Strategy validation failed - missing required method');
@@ -141,14 +141,14 @@ export class ProductStrategyFactory implements IProductStrategyFactory {
 
     // Check platform property
     if (strategy.platform !== platform) {
-      this.logger.error({
+      this.logger?.error({
         platform,
         strategyPlatform: strategy.platform,
       }, 'Strategy validation failed - platform mismatch');
       return false;
     }
 
-    this.logger.debug({ platform }, 'Strategy validation passed');
+    this.logger?.debug({ platform }, 'Strategy validation passed');
     return true;
   }
 
@@ -156,7 +156,7 @@ export class ProductStrategyFactory implements IProductStrategyFactory {
    * Reload strategies (useful for hot reloading in development)
    */
   reloadStrategies(): void {
-    this.logger.info('Reloading product strategies');
+    this.logger?.info('Reloading product strategies');
     this.strategies.clear();
     this.initializeStrategies();
   }

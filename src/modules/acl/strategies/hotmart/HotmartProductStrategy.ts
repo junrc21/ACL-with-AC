@@ -22,7 +22,7 @@ export class HotmartProductStrategy implements IHotmartProductStrategy {
    * Parse platform-specific product data into unified format
    */
   async parseProduct(data: any, context: StrategyContext): Promise<ProductData> {
-    this.logger.info({ data, context }, 'Parsing Hotmart product data');
+    this.logger?.info({ data, context }, 'Parsing Hotmart product data');
 
     // Determine if this is sales data or product catalog data
     if (data.product && data.buyer && data.purchase) {
@@ -255,7 +255,7 @@ export class HotmartProductStrategy implements IHotmartProductStrategy {
       productData.featured = true;
     }
 
-    this.logger.debug({ productData }, 'Applied Hotmart business rules');
+    this.logger?.debug({ productData }, 'Applied Hotmart business rules');
 
     return productData;
   }

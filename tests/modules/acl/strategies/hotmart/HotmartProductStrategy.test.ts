@@ -1,16 +1,26 @@
 // Mock the logger before importing anything
-jest.mock('../../../../../src/shared/utils/logger', () => ({
+jest.mock('@/shared/utils/logger', () => ({
   createPlatformLogger: jest.fn(() => ({
     info: jest.fn(),
     debug: jest.fn(),
     warn: jest.fn(),
     error: jest.fn(),
+    trace: jest.fn(),
+    fatal: jest.fn(),
+  })),
+  createLogger: jest.fn(() => ({
+    info: jest.fn(),
+    debug: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    trace: jest.fn(),
+    fatal: jest.fn(),
   })),
 }));
 
-import { HotmartProductStrategy } from '../../../../../src/modules/acl/strategies/hotmart/HotmartProductStrategy';
-import { Platform } from '../../../../../src/shared/types/platform.types';
-import { ProductType, ProductStatus } from '../../../../../src/shared/types/product.types';
+import { HotmartProductStrategy } from '@/modules/acl/strategies/hotmart/HotmartProductStrategy';
+import { Platform } from '@/shared/types/platform.types';
+import { ProductType, ProductStatus } from '@/shared/types/product.types';
 
 describe('HotmartProductStrategy', () => {
   let strategy: HotmartProductStrategy;

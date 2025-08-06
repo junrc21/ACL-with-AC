@@ -1,18 +1,28 @@
 // Mock the logger before importing anything
-jest.mock('../../../../../src/shared/utils/logger', () => ({
+jest.mock('@/shared/utils/logger', () => ({
   createPlatformLogger: jest.fn(() => ({
     info: jest.fn(),
     debug: jest.fn(),
     warn: jest.fn(),
     error: jest.fn(),
+    trace: jest.fn(),
+    fatal: jest.fn(),
+  })),
+  createLogger: jest.fn(() => ({
+    info: jest.fn(),
+    debug: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    trace: jest.fn(),
+    fatal: jest.fn(),
   })),
 }));
 
-import { ProductStrategyFactory } from '../../../../../src/modules/acl/strategies/factories/ProductStrategyFactory';
-import { Platform } from '../../../../../src/shared/types/platform.types';
-import { HotmartProductStrategy } from '../../../../../src/modules/acl/strategies/hotmart/HotmartProductStrategy';
-import { NuvemshopProductStrategy } from '../../../../../src/modules/acl/strategies/nuvemshop/NuvemshopProductStrategy';
-import { WoocommerceProductStrategy } from '../../../../../src/modules/acl/strategies/woocommerce/WoocommerceProductStrategy';
+import { ProductStrategyFactory } from '@/modules/acl/strategies/factories/ProductStrategyFactory';
+import { Platform } from '@/shared/types/platform.types';
+import { HotmartProductStrategy } from '@/modules/acl/strategies/hotmart/HotmartProductStrategy';
+import { NuvemshopProductStrategy } from '@/modules/acl/strategies/nuvemshop/NuvemshopProductStrategy';
+import { WoocommerceProductStrategy } from '@/modules/acl/strategies/woocommerce/WoocommerceProductStrategy';
 
 describe('ProductStrategyFactory', () => {
   let factory: ProductStrategyFactory;

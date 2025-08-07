@@ -34,6 +34,7 @@ export interface StrategyContext {
   storeId?: string;
   headers: PlatformHeaders;
   timestamp: Date;
+  metadata?: Record<string, any>;
 }
 
 /**

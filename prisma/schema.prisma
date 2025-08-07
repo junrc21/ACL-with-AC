@@ -101,11 +101,13 @@ model Store {
   metadata    Json?
   
   // Relationships
-  products    Product[]
-  customers   Customer[]
-  orders      Order[]
-  categories  Category[]
-  coupons     Coupon[]
+  products      Product[]
+  customers     Customer[]
+  orders        Order[]
+  categories    Category[]
+  coupons       Coupon[]
+  campaigns     Campaign[]
+  discountRules DiscountRule[]
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -588,6 +590,77 @@ model Coupon {
   @@index([platform, storeId])
   @@index([code])
   @@map("coupons")
+}
+
+model Campaign {
+  id                String    @id @default(cuid())
+  storeId           String
+  platform          Platform
+  externalId        String?   // Platform-specific campaign ID
+
+  // Campaign identification
+  name              String
+  description       String?
+
+  // Campaign status and period
+  status            String    // active, inactive, scheduled, expired, paused, draft
+  startsAt          DateTime?
+  expiresAt         DateTime?
+
+  // Usage tracking
+  totalUsage        Int       @default(0)
+  totalSavings      Decimal   @default(0) @db.Decimal(10, 2)
+
+  // Platform-specific metadata
+  metadata          Json?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relationships
+  store             Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  discountRules     DiscountRule[]
+
+  @@index([platform, storeId])
+  @@index([status])
+  @@map("campaigns")
+}
+
+model DiscountRule {
+  id                String    @id @default(cuid())
+  campaignId        String?
+  storeId           String
+  platform          Platform
+
+  // Rule identification
+  name              String
+  description       String?
+
+  // Discount configuration
+  type              String    // percentage, fixed_cart, fixed_product, free_shipping, buy_x_get_y
+  amount            Decimal   @db.Decimal(10, 2)
+  scope             String    // cart, product, category, shipping, global
+
+  // Conditions and restrictions
+  conditions        Json?     // Flexible conditions object
+  restrictions      Json?     // Usage restrictions object
+
+  // Status
+  isActive          Boolean   @default(true)
+
+  // Platform-specific metadata
+  metadata          Json?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relationships
+  store             Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  campaign          Campaign? @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([platform, storeId])
+  @@index([campaignId])
+  @@map("discount_rules")
 }
 
 // User model for Hotmart-style multi-role users (producers, affiliates, etc.)

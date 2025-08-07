@@ -4,6 +4,8 @@ import { ProductsController } from '@/modules/acl/controllers/products.controlle
 import { CustomersController } from '@/modules/acl/controllers/customers.controller';
 import { OrdersController } from '@/modules/acl/controllers/orders.controller';
 import { CategoriesController } from '@/modules/acl/controllers/categories.controller';
+import { DiscountsController } from '@/modules/acl/controllers/discounts.controller';
+import { CampaignsController } from '@/modules/acl/controllers/campaigns.controller';
 import { validatePlatformCapability } from '@/middlewares/platform.middleware';
 import { validateQuery, validateParams } from '@/middlewares/validation.middleware';
 import { ProductQuerySchema } from '@/modules/acl/dto/product.dto';
@@ -22,6 +24,8 @@ export const createRouter = (): Router => {
   const customersController = new CustomersController();
   const ordersController = new OrdersController();
   const categoriesController = new CategoriesController();
+  const discountsController = new DiscountsController();
+  const campaignsController = new CampaignsController();
 
   // Health check routes
   router.get('/health', healthController.health);
@@ -198,6 +202,130 @@ export const createRouter = (): Router => {
     categoriesController.deleteCategory
   );
 
+  // Discounts & Coupons routes
+  router.post('/discounts/coupons',
+    validatePlatformCapability('supportsCoupons'),
+    discountsController.createCoupon
+  );
+
+  router.get('/discounts/coupons',
+    discountsController.listCoupons
+  );
+
+  router.get('/discounts/coupons/statistics',
+    discountsController.getCouponStatistics
+  );
+
+  router.get('/discounts/coupons/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    discountsController.getCouponById
+  );
+
+  router.get('/discounts/coupons/code/:code',
+    validateParams(z.object({ code: z.string().min(1) })),
+    discountsController.getCouponByCode
+  );
+
+  router.put('/discounts/coupons/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsCoupons'),
+    discountsController.updateCoupon
+  );
+
+  router.delete('/discounts/coupons/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsCoupons'),
+    discountsController.deleteCoupon
+  );
+
+  router.post('/discounts/coupons/validate',
+    validatePlatformCapability('supportsCoupons'),
+    discountsController.validateCoupon
+  );
+
+  router.post('/discounts/coupons/apply',
+    validatePlatformCapability('supportsCoupons'),
+    discountsController.applyDiscount
+  );
+
+  router.post('/discounts/sync',
+    validatePlatformCapability('supportsCoupons'),
+    discountsController.syncCoupons
+  );
+
+  router.get('/discounts/platforms/:platform/capabilities',
+    validateParams(z.object({ platform: z.enum(['HOTMART', 'NUVEMSHOP', 'WOOCOMMERCE']) })),
+    discountsController.getPlatformCapabilities
+  );
+
+  router.get('/discounts/health',
+    discountsController.healthCheck
+  );
+
+  // Campaigns routes
+  router.post('/campaigns',
+    validatePlatformCapability('supportsCoupons'),
+    campaignsController.createCampaign
+  );
+
+  router.get('/campaigns',
+    campaignsController.listCampaigns
+  );
+
+  router.get('/campaigns/statistics',
+    campaignsController.getCampaignStatistics
+  );
+
+  router.get('/campaigns/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    campaignsController.getCampaignById
+  );
+
+  router.get('/campaigns/:id/analytics',
+    validateParams(z.object({ id: z.string().uuid() })),
+    campaignsController.getCampaignAnalytics
+  );
+
+  router.put('/campaigns/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsCoupons'),
+    campaignsController.updateCampaign
+  );
+
+  router.delete('/campaigns/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsCoupons'),
+    campaignsController.deleteCampaign
+  );
+
+  router.post('/campaigns/:id/rules',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsCoupons'),
+    campaignsController.addDiscountRule
+  );
+
+  router.post('/campaigns/:id/activate',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsCoupons'),
+    campaignsController.activateCampaign
+  );
+
+  router.post('/campaigns/:id/deactivate',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsCoupons'),
+    campaignsController.deactivateCampaign
+  );
+
+  router.post('/campaigns/:id/pause',
+    validateParams(z.object({ id: z.string().uuid() })),
+    validatePlatformCapability('supportsCoupons'),
+    campaignsController.pauseCampaign
+  );
+
+  router.get('/campaigns/health',
+    campaignsController.healthCheck
+  );
+
   // API version info
   router.get('/', (req, res) => {
     res.json({
@@ -225,6 +353,14 @@ export const createRouter = (): Router => {
         category_sync: '/api/acl/categories/sync',
         category_tree: '/api/acl/categories/tree',
         category_statistics: '/api/acl/categories/statistics',
+        discounts: '/api/acl/discounts/coupons',
+        coupon_validation: '/api/acl/discounts/coupons/validate',
+        coupon_application: '/api/acl/discounts/coupons/apply',
+        discount_sync: '/api/acl/discounts/sync',
+        discount_capabilities: '/api/acl/discounts/platforms/{platform}/capabilities',
+        campaigns: '/api/acl/campaigns',
+        campaign_analytics: '/api/acl/campaigns/{id}/analytics',
+        campaign_rules: '/api/acl/campaigns/{id}/rules',
       },
       supported_platforms: ['HOTMART', 'NUVEMSHOP', 'WOOCOMMERCE'],
       documentation: 'https://docs.cyriusx.com/acl-service',

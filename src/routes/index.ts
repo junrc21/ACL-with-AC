@@ -6,12 +6,16 @@ import { OrdersController } from '@/modules/acl/controllers/orders.controller';
 import { CategoriesController } from '@/modules/acl/controllers/categories.controller';
 import { DiscountsController } from '@/modules/acl/controllers/discounts.controller';
 import { CampaignsController } from '@/modules/acl/controllers/campaigns.controller';
+import { WebhooksController } from '@/modules/acl/controllers/webhooks.controller';
 import { validatePlatformCapability } from '@/middlewares/platform.middleware';
 import { validateQuery, validateParams } from '@/middlewares/validation.middleware';
+import { webhookMiddleware } from '@/middlewares/webhook.middleware';
 import { ProductQuerySchema } from '@/modules/acl/dto/product.dto';
 import { CustomerFilterQuerySchema } from '@/modules/acl/dto/customer.dto';
 import { OrderQuerySchema, OrderStatsQuerySchema } from '@/modules/acl/dto/order.dto';
 import { CategoryQuerySchema } from '@/modules/acl/dto/category.dto';
+import { WebhookQuerySchema, WebhookStatisticsRequestSchema } from '@/modules/acl/dto/webhook.dto';
+import { Platform } from '@/shared/types/platform.types';
 import { z } from 'zod';
 
 /**
@@ -26,6 +30,7 @@ export const createRouter = (): Router => {
   const categoriesController = new CategoriesController();
   const discountsController = new DiscountsController();
   const campaignsController = new CampaignsController();
+  const webhooksController = new WebhooksController();
 
   // Health check routes
   router.get('/health', healthController.health);
@@ -326,6 +331,82 @@ export const createRouter = (): Router => {
     campaignsController.healthCheck
   );
 
+  // Webhook routes
+  router.post('/webhooks/hotmart',
+    ...webhookMiddleware,
+    webhooksController.receiveHotmartWebhook
+  );
+
+  router.post('/webhooks/nuvemshop',
+    ...webhookMiddleware,
+    webhooksController.receiveNuvemshopWebhook
+  );
+
+  router.post('/webhooks/woocommerce',
+    ...webhookMiddleware,
+    webhooksController.receiveWooCommerceWebhook
+  );
+
+  router.get('/webhooks',
+    validateQuery(WebhookQuerySchema),
+    webhooksController.getWebhooks
+  );
+
+  router.get('/webhooks/statistics',
+    validateQuery(WebhookStatisticsRequestSchema),
+    webhooksController.getStatistics
+  );
+
+  router.get('/webhooks/:id',
+    validateParams(z.object({ id: z.string().uuid() })),
+    webhooksController.getWebhookById
+  );
+
+  router.post('/webhooks/:id/retry',
+    validateParams(z.object({ id: z.string().uuid() })),
+    webhooksController.retryWebhook
+  );
+
+  router.post('/webhooks/retry-failed',
+    webhooksController.retryFailedWebhooks
+  );
+
+  // Webhook management routes
+  router.post('/webhooks/register',
+    webhooksController.registerWebhook
+  );
+
+  router.get('/webhooks/config',
+    webhooksController.getWebhookConfigs
+  );
+
+  router.put('/webhooks/config/:id',
+    validateParams(z.object({ id: z.string() })),
+    webhooksController.updateWebhookConfig
+  );
+
+  router.get('/webhooks/sync-logs',
+    validateQuery(z.object({
+      platform: z.nativeEnum(Platform).optional(),
+      entityType: z.string().optional(),
+      limit: z.coerce.number().min(1).max(100).default(20),
+      offset: z.coerce.number().min(0).default(0),
+    })),
+    webhooksController.getSyncLogs
+  );
+
+  router.get('/webhooks/health',
+    webhooksController.getWebhookHealth
+  );
+
+  router.post('/webhooks/test',
+    webhooksController.testWebhook
+  );
+
+  router.get('/webhooks/queue/status',
+    webhooksController.getQueueStatus
+  );
+
   // API version info
   router.get('/', (req, res) => {
     res.json({
@@ -361,6 +442,19 @@ export const createRouter = (): Router => {
         campaigns: '/api/acl/campaigns',
         campaign_analytics: '/api/acl/campaigns/{id}/analytics',
         campaign_rules: '/api/acl/campaigns/{id}/rules',
+        webhooks_hotmart: '/api/acl/webhooks/hotmart',
+        webhooks_nuvemshop: '/api/acl/webhooks/nuvemshop',
+        webhooks_woocommerce: '/api/acl/webhooks/woocommerce',
+        webhook_list: '/api/acl/webhooks',
+        webhook_statistics: '/api/acl/webhooks/statistics',
+        webhook_retry: '/api/acl/webhooks/{id}/retry',
+        webhook_retry_failed: '/api/acl/webhooks/retry-failed',
+        webhook_register: '/api/acl/webhooks/register',
+        webhook_config: '/api/acl/webhooks/config',
+        webhook_sync_logs: '/api/acl/webhooks/sync-logs',
+        webhook_health: '/api/acl/webhooks/health',
+        webhook_test: '/api/acl/webhooks/test',
+        webhook_queue_status: '/api/acl/webhooks/queue/status',
       },
       supported_platforms: ['HOTMART', 'NUVEMSHOP', 'WOOCOMMERCE'],
       documentation: 'https://docs.cyriusx.com/acl-service',

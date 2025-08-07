@@ -36,7 +36,14 @@ class MockDiscountsService {
       throw new BadRequestException('Invalid coupon data: Coupon code is required');
     }
 
-    const coupon = await this.prisma.coupon.create({ data: createCouponDto });
+    const couponData = {
+      ...createCouponDto,
+      storeId,
+      status: CouponStatus.ACTIVE,
+      usedCount: 0,
+    };
+
+    const coupon = await this.prisma.coupon.create({ data: couponData });
     return this.mapPrismaCouponToCouponData(coupon);
   }
 
@@ -71,7 +78,12 @@ class MockDiscountsService {
     if (query.code) where.code = { contains: query.code, mode: 'insensitive' };
 
     const [coupons, total] = await Promise.all([
-      this.prisma.coupon.findMany({ where, skip: (query.page - 1) * query.limit, take: query.limit }),
+      this.prisma.coupon.findMany({
+        where,
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+        orderBy: { createdAt: 'desc' }
+      }),
       this.prisma.coupon.count({ where })
     ]);
 
@@ -87,7 +99,10 @@ class MockDiscountsService {
       throw new NotFoundException(`Coupon with ID '${couponId}' not found`);
     }
 
-    const updated = await this.prisma.coupon.update({ where: { id: couponId }, data: updateDto });
+    const updated = await this.prisma.coupon.update({
+      where: { id: couponId },
+      data: { ...updateDto, updatedAt: new Date() }
+    });
     return this.mapPrismaCouponToCouponData(updated);
   }
 
@@ -279,15 +294,18 @@ describe('DiscountsService', () => {
     });
 
     it('should throw BadRequestException for invalid coupon data', async () => {
-      const mockStrategy = require('@/modules/acl/strategies/factories/DiscountStrategyFactory').DiscountStrategyFactory.getStrategy();
-      mockStrategy.validateCouponData.mockReturnValue({
-        isValid: false,
-        errors: ['Invalid discount amount'],
-      });
+      const invalidCouponDto = {
+        platform: Platform.HOTMART,
+        code: '', // Invalid: empty code
+        name: 'Invalid Coupon',
+        type: DiscountType.PERCENTAGE,
+        amount: 20,
+        scope: DiscountScope.CART,
+      };
 
       prismaService.coupon.findFirst.mockResolvedValue(null);
 
-      await expect(service.createCoupon('store-123', createCouponDto))
+      await expect(service.createCoupon('store-123', invalidCouponDto))
         .rejects.toThrow(BadRequestException);
 
       expect(prismaService.coupon.create).not.toHaveBeenCalled();

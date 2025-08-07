@@ -7,6 +7,7 @@ import { CategoriesController } from '@/modules/acl/controllers/categories.contr
 import { DiscountsController } from '@/modules/acl/controllers/discounts.controller';
 import { CampaignsController } from '@/modules/acl/controllers/campaigns.controller';
 import { WebhooksController } from '@/modules/acl/controllers/webhooks.controller';
+import { analyticsController } from '@/modules/acl/controllers/analytics.controller';
 import { validatePlatformCapability } from '@/middlewares/platform.middleware';
 import { validateQuery, validateParams } from '@/middlewares/validation.middleware';
 import { webhookMiddleware } from '@/middlewares/webhook.middleware';
@@ -15,7 +16,13 @@ import { CustomerFilterQuerySchema } from '@/modules/acl/dto/customer.dto';
 import { OrderQuerySchema, OrderStatsQuerySchema } from '@/modules/acl/dto/order.dto';
 import { CategoryQuerySchema } from '@/modules/acl/dto/category.dto';
 import { WebhookQuerySchema, WebhookStatisticsRequestSchema } from '@/modules/acl/dto/webhook.dto';
-import { Platform } from '@/shared/types/platform.types';
+import {
+  SalesAnalyticsRequestSchema,
+  CustomerAnalyticsRequestSchema,
+  ProductAnalyticsRequestSchema,
+  PerformanceMetricsRequestSchema
+} from '@/modules/acl/dto/analytics.dto';
+import { Platform } from '@prisma/client';
 import { z } from 'zod';
 
 /**
@@ -407,6 +414,46 @@ export const createRouter = (): Router => {
     webhooksController.getQueueStatus
   );
 
+  // Analytics routes
+  router.get('/analytics/sales',
+    validateQuery(SalesAnalyticsRequestSchema),
+    analyticsController.getSalesAnalytics
+  );
+
+  router.get('/analytics/sales/trends',
+    validateQuery(SalesAnalyticsRequestSchema),
+    analyticsController.getSalesTrends
+  );
+
+  router.get('/analytics/customers',
+    validateQuery(CustomerAnalyticsRequestSchema),
+    analyticsController.getCustomerAnalytics
+  );
+
+  router.get('/analytics/customers/segmentation',
+    validateQuery(CustomerAnalyticsRequestSchema),
+    analyticsController.getCustomerSegmentation
+  );
+
+  router.get('/analytics/products',
+    validateQuery(ProductAnalyticsRequestSchema),
+    analyticsController.getProductAnalytics
+  );
+
+  router.get('/analytics/products/top',
+    validateQuery(ProductAnalyticsRequestSchema),
+    analyticsController.getTopProducts
+  );
+
+  router.get('/analytics/products/categories',
+    validateQuery(ProductAnalyticsRequestSchema),
+    analyticsController.getCategoryPerformance
+  );
+
+  router.get('/analytics/dashboard',
+    analyticsController.getDashboardSummary
+  );
+
   // API version info
   router.get('/', (req, res) => {
     res.json({
@@ -455,6 +502,14 @@ export const createRouter = (): Router => {
         webhook_health: '/api/acl/webhooks/health',
         webhook_test: '/api/acl/webhooks/test',
         webhook_queue_status: '/api/acl/webhooks/queue/status',
+        analytics_sales: '/api/acl/analytics/sales',
+        analytics_sales_trends: '/api/acl/analytics/sales/trends',
+        analytics_customers: '/api/acl/analytics/customers',
+        analytics_customer_segmentation: '/api/acl/analytics/customers/segmentation',
+        analytics_products: '/api/acl/analytics/products',
+        analytics_top_products: '/api/acl/analytics/products/top',
+        analytics_category_performance: '/api/acl/analytics/products/categories',
+        analytics_dashboard: '/api/acl/analytics/dashboard',
       },
       supported_platforms: ['HOTMART', 'NUVEMSHOP', 'WOOCOMMERCE'],
       documentation: 'https://docs.cyriusx.com/acl-service',
